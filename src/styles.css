@@ -282,7 +282,6 @@ figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-to
 .flash-summary dd { margin: 0; font-size: 0.82rem; text-align: right; }
 .flash-confirmation { display: grid; grid-template-columns: 1.25rem 1fr; gap: 0.9rem; margin-top: 1.5rem; color: var(--ink-muted); font-size: 0.82rem; line-height: 1.65; cursor: pointer; }
 .flash-confirmation input { width: 1.15rem; height: 1.15rem; margin: 0.2rem 0 0; accent-color: var(--ink); }
-.serial-output { height: 13rem; margin: 0; padding: 1rem; overflow: auto; border: 1px solid var(--ink-16); background: #111; color: #eee; font: 0.75rem/1.6 Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 .flash-progress { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0; padding: 0; border-top: 1px solid var(--ink-16); list-style: none; }
 .flash-progress li { min-height: 5.5rem; padding: 1rem; border-right: 1px solid var(--ink-10); color: var(--ink-muted); font-size: 0.7rem; letter-spacing: 0.08em; }
 .flash-progress li:last-child { border-right: 0; }
@@ -390,3 +389,4 @@ figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-to
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   .js .reveal { opacity: 1; transform: none; }
 }
+

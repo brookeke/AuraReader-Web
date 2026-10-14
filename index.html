@@ -140,30 +140,25 @@
             <div class="flash-copy">
               <p class="flash-kicker">站内刷写引导</p>
               <h3>AuraReader v0.1.0</h3>
-              <p>操作选择、数据处理、最终确认与写入进度都会留在当前页面。只有选择串口设备时，浏览器会显示系统授权窗口。</p>
+              <p>版本选择、数据处理、最终确认与写入进度都会留在当前页面。只有选择串口设备时，浏览器会显示系统授权窗口。</p>
               <a class="text-link hover-line" href="#manual">查看命令行备用说明</a>
             </div>
             <div class="flash-flow" data-flash-flow>
               <ol class="flash-flow-steps" aria-label="刷机引导进度">
-                <li data-flow-marker="mode" aria-current="step"><span>01</span>开始安装</li>
+                <li data-flow-marker="version" aria-current="step"><span>01</span>开始安装</li>
                 <li data-flow-marker="erase"><span>02</span>数据处理</li>
                 <li data-flow-marker="confirm"><span>03</span>确认执行</li>
               </ol>
 
-              <section class="flash-panel" data-flash-panel="mode" aria-labelledby="flash-mode-title">
+              <section class="flash-panel" data-flash-panel="version" aria-labelledby="flash-version-title">
                 <p class="flash-step-count">步骤 1 / 3</p>
-                <h4 id="flash-mode-title" tabindex="-1">你想进行哪项操作？</h4>
+                <h4 id="flash-version-title" tabindex="-1">选择安装版本</h4>
                 <fieldset class="flash-options">
-                  <legend class="sr-only">选择设备操作</legend>
+                  <legend class="sr-only">选择 AuraReader 固件版本</legend>
                   <label class="flash-option">
-                    <input type="radio" name="flash-mode" value="install" data-flash-mode="install" checked />
-                    <span><strong>安装 AuraReader</strong><small>写入 v0.1.0 完整固件</small></span>
-                    <span aria-hidden="true">↓</span>
-                  </label>
-                  <label class="flash-option">
-                    <input type="radio" name="flash-mode" value="console" data-flash-mode="console" />
-                    <span><strong>串口日志</strong><small>查看设备启动与运行输出</small></span>
-                    <span aria-hidden="true">›_</span>
+                    <input type="radio" name="firmware-version" value="0.1.0" data-firmware-version="0.1.0" checked />
+                    <span><strong>AuraReader v0.1.0</strong><small>稳定版 · 完整固件</small></span>
+                    <span class="option-tag">当前版本</span>
                   </label>
                 </fieldset>
                 <div class="flash-panel-actions flash-panel-actions-single">
@@ -189,7 +184,7 @@
                 </fieldset>
                 <p class="flash-note">两种方式都会改写设备内部闪存；TF 卡不会被写入。遇到旧分区或启动异常时，再选择完整擦除。</p>
                 <div class="flash-panel-actions">
-                  <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
+                  <button class="button button-quiet" type="button" data-flow-back="version">返回</button>
                   <button class="button button-dark" type="button" data-flow-next="confirm">继续 <span aria-hidden="true">→</span></button>
                 </div>
               </section>
@@ -213,18 +208,6 @@
                 </div>
               </section>
 
-              <section class="flash-panel" data-flash-panel="console" aria-labelledby="serial-console-title" hidden>
-                <p class="flash-step-count">串口工具</p>
-                <h4 id="serial-console-title" tabindex="-1">查看设备日志</h4>
-                <p class="flash-note">连接速率为 115200。关闭其他占用串口的软件后，再选择 AuraReader 设备。</p>
-                <pre id="serial-output" class="serial-output" aria-label="串口日志输出" tabindex="0">等待连接…</pre>
-                <p id="console-status" class="flash-live-status" role="status" aria-live="polite">尚未连接设备。</p>
-                <div class="flash-panel-actions">
-                  <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
-                  <button id="console-connect-button" class="button button-dark" type="button">选择设备并连接</button>
-                  <button id="console-disconnect-button" class="button button-quiet" type="button" hidden>断开连接</button>
-                </div>
-              </section>
             </div>
           </div>
           <ol class="flash-progress" aria-label="刷写执行进度">
@@ -257,3 +240,4 @@
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
+

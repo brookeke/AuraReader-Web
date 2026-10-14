@@ -39,8 +39,11 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
   assert.doesNotMatch(html, /esp-web-install-button|esp-web-tools@/);
-  assert.match(html, /data-flash-mode="install"/);
-  assert.match(html, /data-flash-mode="console"/);
+  assert.match(html, /id="flash-version-title"[^>]*>选择安装版本<\/h4>/);
+  assert.match(html, /name="firmware-version"[^>]+value="0\.1\.0"[^>]+checked/s);
+  assert.match(html, /data-firmware-version="0\.1\.0"/);
+  assert.doesNotMatch(html, /flash-mode|data-flash-panel="console"|串口日志/);
+  assert.doesNotMatch(flasher, /consoleButton|disconnectConsole|serialReader/);
   assert.match(html, /name="erase-mode"[^>]+value="standard"[^>]+checked/s);
   assert.match(html, /name="erase-mode"[^>]+value="full"/s);
   assert.match(html, /id="flash-confirmation"/);
@@ -74,7 +77,7 @@ test("the guided steps keep a stable work area and aligned actions", async () =>
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
 
-  assert.match(html, /data-flow-marker="mode"[^>]*><span>01<\/span>开始安装<\/li>/);
+  assert.match(html, /data-flow-marker="version"[^>]*><span>01<\/span>开始安装<\/li>/);
   assert.doesNotMatch(html, /class="safety-note/);
   assert.doesNotMatch(html, /重要提示/);
   assert.match(css, /\.flash-workbench\s*\{[^}]*grid-column:\s*1\s*\/\s*-1;/s);
@@ -87,3 +90,4 @@ test("production builds copy the firmware tree into dist", async () => {
   const buildScript = await readFile(new URL("scripts/copy-static.mjs", projectRoot), "utf8");
   assert.match(buildScript, /cp\(source, destination, \{ recursive: true \}\)/);
 });
+

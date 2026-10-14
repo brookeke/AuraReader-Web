@@ -22,23 +22,16 @@ export function setupWebFlasher() {
   const flow = root.querySelector("[data-flash-flow]");
   const panels = [...root.querySelectorAll("[data-flash-panel]")];
   const markers = [...root.querySelectorAll("[data-flow-marker]")];
-  const modeInputs = [...root.querySelectorAll("[name='flash-mode']")];
   const eraseInputs = [...root.querySelectorAll("[name='erase-mode']")];
   const confirmation = root.querySelector("#flash-confirmation");
   const flashButton = root.querySelector("#flash-button");
   const liveStatus = root.querySelector("#flash-live-status");
   const browserStatus = root.querySelector("#browser-status");
   const eraseSummary = root.querySelector("[data-erase-summary]");
-  const consoleButton = root.querySelector("#console-connect-button");
-  const consoleDisconnect = root.querySelector("#console-disconnect-button");
-  const consoleStatus = root.querySelector("#console-status");
-  const consoleOutput = root.querySelector("#serial-output");
   const progressItems = [...root.querySelectorAll("[data-flash-progress]")];
   const browserSupported = hasWebSerial();
   let releaseReady = false;
   let busy = false;
-  let serialPort = null;
-  let serialReader = null;
 
   browserStatus.textContent = browserSupported ? "浏览器支持 Web Serial" : "请使用桌面版 Chrome 或 Edge";
   browserStatus.toggleAttribute("data-supported", browserSupported);
@@ -49,7 +42,7 @@ export function setupWebFlasher() {
 
   function showPanel(name) {
     panels.forEach((panel) => panel.toggleAttribute("hidden", panel.dataset.flashPanel !== name));
-    const order = name === "console" ? 1 : ["mode", "erase", "confirm"].indexOf(name) + 1;
+    const order = ["version", "erase", "confirm"].indexOf(name) + 1;
     markers.forEach((marker, index) => {
       if (index + 1 === order) marker.setAttribute("aria-current", "step");
       else marker.removeAttribute("aria-current");
@@ -108,8 +101,7 @@ export function setupWebFlasher() {
   root.querySelectorAll("[data-flow-next]").forEach((button) => {
     button.addEventListener("click", () => {
       const destination = button.dataset.flowNext;
-      if (destination) showPanel(destination);
-      else showPanel(selectedValue(modeInputs) === "console" ? "console" : "erase");
+      showPanel(destination || "erase");
     });
   });
 
@@ -190,44 +182,7 @@ export function setupWebFlasher() {
     }
   });
 
-  async function disconnectConsole() {
-    try { await serialReader?.cancel(); } catch {}
-    try { serialReader?.releaseLock(); } catch {}
-    serialReader = null;
-    try { await serialPort?.close(); } catch {}
-    serialPort = null;
-    consoleButton.hidden = false;
-    consoleDisconnect.hidden = true;
-    consoleStatus.textContent = "串口已断开。";
-  }
-
-  consoleButton?.addEventListener("click", async () => {
-    if (!browserSupported || serialPort) return;
-    consoleStatus.textContent = "请在系统窗口中选择 AuraReader 设备。";
-    try {
-      serialPort = await navigator.serial.requestPort();
-      await serialPort.open({ baudRate: 115200 });
-      consoleOutput.textContent = "";
-      consoleButton.hidden = true;
-      consoleDisconnect.hidden = false;
-      consoleStatus.textContent = "已连接 · 115200 baud";
-      serialReader = serialPort.readable.getReader();
-      const decoder = new TextDecoder();
-      while (serialPort && serialReader) {
-        const { value, done } = await serialReader.read();
-        if (done) break;
-        consoleOutput.textContent += decoder.decode(value, { stream: true });
-        consoleOutput.scrollTop = consoleOutput.scrollHeight;
-      }
-    } catch (error) {
-      consoleStatus.textContent = errorMessage(error);
-      if (serialPort) await disconnectConsole();
-    }
-  });
-
-  consoleDisconnect?.addEventListener("click", () => void disconnectConsole());
-
-  showPanel("mode");
+  showPanel("version");
   updateInstallButton();
 
   return {
@@ -237,3 +192,4 @@ export function setupWebFlasher() {
     },
   };
 }
+
