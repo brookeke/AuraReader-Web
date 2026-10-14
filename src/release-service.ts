@@ -43,4 +43,3 @@ function parseReleaseStatus(value: unknown): ReleaseStatus {
 
   throw new Error("Release status response is invalid");
 }
-

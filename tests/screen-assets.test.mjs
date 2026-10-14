@@ -5,7 +5,7 @@ import test from "node:test";
 const projectRoot = new URL("../", import.meta.url);
 
 test("reader body lines stay inside the reading panel", async () => {
-  const svg = await readFile(new URL("public/screens/reader.svg", projectRoot), "utf8");
+  const svg = await readFile(new URL("screens/reader.svg", projectRoot), "utf8");
   const bodyLines = [...svg.matchAll(/<text\s+([^>]+)>([^<]+)<\/text>/g)]
     .map((match) => {
       const attributes = match[1];
@@ -25,4 +25,3 @@ test("reader body lines stay inside the reading panel", async () => {
     );
   }
 });
-

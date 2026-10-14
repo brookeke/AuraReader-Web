@@ -126,4 +126,3 @@ setupReveals();
 setupFaq();
 setBrowserStatus();
 void setReleaseStatus();
-

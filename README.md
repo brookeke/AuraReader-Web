@@ -1,13 +1,13 @@
 # AuraReader 官网
 
-AuraReader 的中文单页官网。当前版本展示固件理念、功能、使用说明及刷机入口；在正式固件发布前，刷机能力保持安全关闭。
+AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明及刷机入口；在正式固件发布前，刷机能力保持安全关闭。
 
 ## 技术栈
 
 - Vite 6
 - TypeScript
 - 原生 HTML / CSS / DOM API
-- GitHub Actions + GitHub Pages
+- GitHub Actions + GitHub Pages（从分支发布）
 
 ## 本地开发
 
@@ -31,10 +31,10 @@ pnpm verify
 1. 在 GitHub 新建一个空仓库。
 2. 将本目录中的全部文件放在仓库根目录并推送到 `main` 分支。
 3. 打开仓库的 **Settings → Pages**。
-4. 在 **Build and deployment** 中将 **Source** 设为 **GitHub Actions**。
-5. 等待 `Deploy AuraReader to GitHub Pages` 工作流完成。
+4. 在 **Build and deployment** 中将 **Source** 设为 **Deploy from a branch**。
+5. 将分支设为 **main**、目录设为 **/ (root)**，保存后等待 Pages 发布完成。
 
-工作流会依次安装锁定依赖、运行类型检查和测试、执行生产构建，再发布 `dist/`。Vite 使用相对资源路径，因此同时兼容用户主页仓库和普通项目仓库。
+`Verify AuraReader website` 工作流会依次安装锁定依赖、运行类型检查和测试，并验证生产构建。仓库根目录本身可直接静态托管，Vite 构建产物也可部署到其他静态文件服务。
 
 如果需要连接后端，在仓库 **Settings → Secrets and variables → Actions → Variables** 中添加以下任一变量：
 
@@ -47,8 +47,8 @@ pnpm verify
 
 ```text
 .
-├─ .github/workflows/deploy-pages.yml  # 自动验证与部署
-├─ public/screens/                     # 设备界面素材
+├─ .github/workflows/verify.yml        # 自动验证与构建
+├─ screens/                            # 设备界面素材
 ├─ src/main.ts                         # 页面交互入口
 ├─ src/release-service.ts              # 固件发布状态接口
 ├─ src/styles.css                      # 响应式样式
@@ -84,9 +84,8 @@ pnpm verify
 
 ## 素材来源
 
-`public/screens/` 中的界面图复制自工作区现有的 `ui-design-final/figma-editable/screens/`，用于真实展示 AuraReader 设备 UI。
+`screens/` 中的界面图复制自工作区现有的 `ui-design-final/figma-editable/screens/`，用于真实展示 AuraReader 设备 UI。该位置兼容 GitHub Pages 从仓库根目录发布，也会被 Vite 正确纳入生产构建。
 
 ## 发布说明
 
-当前官网版本为 `1.0.1`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
-
+当前官网版本为 `1.0.2`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。

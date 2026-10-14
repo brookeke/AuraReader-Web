@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
@@ -11,6 +11,21 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css" \/>/);
   assert.match(html, /<script type="module" src="\.\/src\/main\.ts"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
+});
+
+test("image paths also resolve when GitHub Pages serves the repository root", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const imageSources = [...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+
+  assert.ok(imageSources.length > 0, "expected image sources in index.html");
+  for (const source of imageSources) {
+    await assert.doesNotReject(
+      access(new URL(source, projectRoot)),
+      `image source does not exist at repository root: ${source}`,
+    );
+  }
 });
 
 test("the footer does not position AuraReader as made only for Xiao Zhi Pico", async () => {
@@ -38,4 +53,3 @@ test("the interface gallery becomes one readable column at the tablet breakpoint
   assert.match(tabletStyles, /\.screen-gallery\s*\{[^}]*grid-template-columns:\s*1fr;/s);
   assert.match(tabletStyles, /\.screen-card\s*\{[^}]*width:\s*min\(72vw,\s*22rem\);/s);
 });
-
