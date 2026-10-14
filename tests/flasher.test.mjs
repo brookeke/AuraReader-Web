@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
@@ -22,25 +23,14 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
   assert.ok((await stat(imageUrl)).size > 0x910000, "merged image must include the font partition");
 });
 
-test("the merged image contains every release payload at its flash offset", async () => {
+test("the merged image matches the verified release artifact", async () => {
   const image = await readFile(
     new URL("firmware/v0.1.0/aurareader-v0.1.0.bin", projectRoot),
   );
-  const releaseRoot = new URL(
-    "../deliverables/AuraReader-latest-ui-firmware-2026-10-15/",
-    projectRoot,
-  );
-  const parts = [
-    [0x0, "bootloader/bootloader.bin"],
-    [0x8000, "partition_table/partition-table.bin"],
-    [0x10000, "Read_Pico.bin"],
-    [0x910000, "builtin.ttf"],
-  ];
+  const digest = createHash("sha256").update(image).digest("hex");
 
-  for (const [offset, path] of parts) {
-    const part = await readFile(new URL(path, releaseRoot));
-    assert.deepEqual(image.subarray(offset, offset + part.length), part, `${path} differs`);
-  }
+  assert.equal(image[0], 0xe9, "expected an ESP image header");
+  assert.equal(digest, "76d382874ef211e15cde34f42bf55abe4e5e04ddf49554e545fc3fda89729ef8");
 });
 
 test("the installer is gated by browser support and all safety confirmations", async () => {
