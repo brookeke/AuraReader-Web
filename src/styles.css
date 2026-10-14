@@ -250,6 +250,9 @@ figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-to
 .checklist { margin: 0; border: 0; }
 .checklist label { display: grid; grid-template-columns: 1.25rem 1fr; gap: 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--ink-10); color: var(--ink-muted); font-size: 0.9rem; line-height: 1.6; }
 .checklist input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; border-radius: 0; accent-color: var(--ink); }
+.flash-install-button { display: block; margin-top: 2rem; --esp-tools-button-color: var(--ink); --esp-tools-button-text-color: var(--paper); --esp-tools-button-border-radius: 0; }
+.flash-install-button .button { width: 100%; margin-top: 0; }
+.flash-compatibility { margin: 2rem 0 0; color: var(--ink-muted); font-size: 0.82rem; line-height: 1.7; }
 .flash-progress { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0; padding: 0; border-top: 1px solid var(--ink-16); list-style: none; }
 .flash-progress li { min-height: 5.5rem; padding: 1rem; border-right: 1px solid var(--ink-10); color: var(--ink-muted); font-size: 0.7rem; letter-spacing: 0.08em; }
 .flash-progress li:last-child { border-right: 0; }

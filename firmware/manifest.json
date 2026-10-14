@@ -1,0 +1,17 @@
+{
+  "name": "AuraReader",
+  "version": "0.1.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "improv": false,
+      "parts": [
+        {
+          "path": "v0.1.0/aurareader-v0.1.0.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

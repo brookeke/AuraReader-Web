@@ -1,6 +1,6 @@
 # AuraReader 官网
 
-AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明及刷机入口；在正式固件发布前，刷机能力保持安全关闭。
+AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明，并通过 ESP Web Tools 提供浏览器刷写。
 
 ## 技术栈
 
@@ -41,7 +41,7 @@ pnpm verify
 - `VITE_API_BASE_URL`
 - `VITE_RELEASE_MANIFEST_URL`
 
-两者都不设置时，网站会显示“固件加紧开发中”，且不会尝试连接或写入设备。
+两者都不设置时，网站读取仓库内的 `firmware/manifest.json`，提供当前稳定固件。
 
 ## 项目结构
 
@@ -49,8 +49,10 @@ pnpm verify
 .
 ├─ .github/workflows/verify.yml        # 自动验证与构建
 ├─ screens/                            # 设备界面素材
-├─ src/main.ts                         # 页面交互入口
-├─ src/release-service.ts              # 固件发布状态接口
+├─ firmware/                           # 网页刷机清单与合并固件
+├─ scripts/copy-static.mjs             # 将固件复制到 Vite 构建产物
+├─ src/main.js                         # 页面交互与刷机安全门槛
+├─ src/release-service.js              # 固件发布状态接口
 ├─ src/styles.css                      # 响应式样式
 ├─ tests/                              # 静态结构与资源测试
 ├─ index.html                          # 页面入口
@@ -64,7 +66,7 @@ pnpm verify
 
 1. `VITE_API_BASE_URL`：请求 `GET {API_BASE_URL}/v1/releases/latest`
 2. `VITE_RELEASE_MANIFEST_URL`：读取静态 JSON 清单
-3. 两者均未配置：安全回退为 `pending`，刷机保持禁用
+3. 两者均未配置：读取 `firmware/manifest.json`
 
 响应只接受以下两种可扩展结构：
 
@@ -82,10 +84,22 @@ pnpm verify
 
 接口不可用或结构不合法时，页面显示“暂时无法读取固件状态”，不会尝试连接或写入设备。后端需为官网部署来源配置 CORS；该请求不携带凭据。
 
+## 放置编译后的固件
+
+网页刷机使用单一合并镜像。当前文件放在：
+
+```text
+firmware/v0.1.0/aurareader-v0.1.0.bin
+```
+
+发布新版本时，新建 `firmware/vX.Y.Z/`，把合并镜像放入其中，并同步更新 `firmware/manifest.json` 的 `version`、`path` 和 `offset`。不要直接把单独的应用固件作为 `offset: 0` 发布。
+
+本版合并镜像包含：`0x0` 启动程序、`0x8000` 分区表、`0x10000` AuraReader 主程序、`0x910000` 系统字体。原始构建产物仍可分别保留在发布归档中，官网只需要托管合并后的 `.bin` 与 manifest。
+
 ## 素材来源
 
 `screens/` 中的界面图复制自工作区现有的 `ui-design-final/figma-editable/screens/`，用于真实展示 AuraReader 设备 UI。该位置兼容 GitHub Pages 从仓库根目录发布，也会被 Vite 正确纳入生产构建。
 
 ## 发布说明
 
-当前官网版本为 `1.0.2`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `1.1.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。

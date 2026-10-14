@@ -1,13 +1,13 @@
-import { getReleaseStatus } from "./release-service";
+import { getReleaseStatus } from "./release-service.js";
 
 document.documentElement.classList.add("js");
 
-const query = <T extends Element>(selector: string) => document.querySelector<T>(selector);
-const queryAll = <T extends Element>(selector: string) => [...document.querySelectorAll<T>(selector)];
+const query = (selector) => document.querySelector(selector);
+const queryAll = (selector) => [...document.querySelectorAll(selector)];
 
 function setupNavigation() {
-  const toggle = query<HTMLButtonElement>(".menu-toggle");
-  const nav = query<HTMLElement>("#site-nav");
+  const toggle = query(".menu-toggle");
+  const nav = query("#site-nav");
   if (!toggle || !nav) return;
 
   const close = () => {
@@ -21,7 +21,7 @@ function setupNavigation() {
     nav.toggleAttribute("data-open", !isOpen);
   });
 
-  queryAll<HTMLAnchorElement>("#site-nav a").forEach((link) => link.addEventListener("click", close));
+  queryAll("#site-nav a").forEach((link) => link.addEventListener("click", close));
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || !nav.hasAttribute("data-open")) return;
     close();
@@ -33,18 +33,18 @@ function setupNavigation() {
 }
 
 function setupActiveNavigation() {
-  const links = queryAll<HTMLAnchorElement>("#site-nav a[href^='#']");
+  const links = queryAll("#site-nav a[href^='#']");
   const destinations = links.flatMap((link) => {
     const selector = link.getAttribute("href");
-    const section = selector ? query<HTMLElement>(selector) : null;
+    const section = selector ? query(selector) : null;
     return section ? [{ link, section }] : [];
   });
-  let animationFrame: number | null = null;
+  let animationFrame = null;
 
   const update = () => {
     animationFrame = null;
     const marker = Math.min(window.innerHeight * 0.35, 240);
-    const active = destinations.reduce<HTMLAnchorElement | null>((current, destination) => {
+    const active = destinations.reduce((current, destination) => {
       return destination.section.getBoundingClientRect().top <= marker ? destination.link : current;
     }, null);
 
@@ -66,7 +66,7 @@ function setupActiveNavigation() {
 }
 
 function setupReveals() {
-  const items = queryAll<HTMLElement>(".reveal");
+  const items = queryAll(".reveal");
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
     items.forEach((item) => item.setAttribute("data-visible", ""));
     return;
@@ -87,42 +87,73 @@ function setupReveals() {
 }
 
 function setupFaq() {
-  queryAll<HTMLDetailsElement>(".faq-list details").forEach((item) => {
+  queryAll(".faq-list details").forEach((item) => {
     item.addEventListener("toggle", () => {
       if (!item.open) return;
-      queryAll<HTMLDetailsElement>(".faq-list details").forEach((peer) => {
+      queryAll(".faq-list details").forEach((peer) => {
         if (peer !== item) peer.open = false;
       });
     });
   });
 }
 
+function browserCanFlash() {
+  return "serial" in navigator && window.isSecureContext;
+}
+
 function setBrowserStatus() {
-  const status = query<HTMLElement>("#browser-status");
+  const status = query("#browser-status");
   if (!status) return;
-  const supported = "serial" in navigator;
-  status.textContent = supported ? "浏览器支持 Web Serial" : "当前浏览器不支持 Web Serial";
+  const supported = browserCanFlash();
+  status.textContent = supported ? "浏览器支持 Web Serial" : "请使用桌面版 Chrome 或 Edge";
   status.toggleAttribute("data-supported", supported);
 }
 
-async function setReleaseStatus() {
-  const status = query<HTMLElement>("#release-status");
+function setupFlasher() {
+  const checklist = query(".checklist");
+  const button = query("#flash-button");
+  if (!checklist || !button) return () => {};
+
+  const inputs = queryAll(".checklist input[type='checkbox']");
+  let releaseReady = false;
+
+  const update = (ready = releaseReady) => {
+    releaseReady = ready;
+    const confirmed = inputs.length > 0 && inputs.every((input) => input.checked);
+    const enabled = releaseReady && browserCanFlash() && confirmed;
+    button.disabled = !enabled;
+    button.classList.toggle("button-disabled", !enabled);
+    button.classList.toggle("button-dark", enabled);
+    button.textContent = enabled ? "连接设备并开始刷写" : "完成确认后开始刷写";
+  };
+
+  inputs.forEach((input) => input.addEventListener("change", () => update()));
+  update(false);
+  return update;
+}
+
+async function setReleaseStatus(onReady) {
+  const status = query("#release-status");
   if (!status) return;
 
   try {
     const release = await getReleaseStatus();
-    status.textContent = release.state === "pending" ? "固件加紧开发中" : `固件 ${release.version} 已就绪`;
-    status.closest(".flash-status-line")?.toggleAttribute("data-ready", release.state === "available");
+    const ready = release.state === "available";
+    status.textContent = ready ? `固件 ${release.version} 已就绪` : "固件暂未发布";
+    status.closest(".flash-status-line")?.toggleAttribute("data-ready", ready);
+    onReady(ready);
   } catch {
     status.textContent = "暂时无法读取固件状态";
+    onReady(false);
   }
 }
 
-const year = query<HTMLElement>("[data-year]");
+const year = query("[data-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 setupNavigation();
 setupActiveNavigation();
 setupReveals();
 setupFaq();
 setBrowserStatus();
-void setReleaseStatus();
+const updateFlasher = setupFlasher();
+void setReleaseStatus(updateFlasher);

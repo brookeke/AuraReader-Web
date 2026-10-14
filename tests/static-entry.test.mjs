@@ -6,10 +6,10 @@ const projectRoot = new URL("../", import.meta.url);
 
 test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
-  const main = await readFile(new URL("src/main.ts", projectRoot), "utf8");
+  const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
   assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.ts"><\/script>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
@@ -34,14 +34,13 @@ test("the footer does not position AuraReader as made only for Xiao Zhi Pico", a
   assert.doesNotMatch(html, /为小纸\s*Pico\s*而作/i);
 });
 
-test("the pending release state uses the finalized development copy", async () => {
+test("the published release replaces the development placeholder copy", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
-  const main = await readFile(new URL("src/main.ts", projectRoot), "utf8");
+  const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /固件加紧开发中/);
-  assert.match(main, /固件加紧开发中/);
-  const previousCopy = new RegExp(["固件", "准备中"].join(""));
-  assert.doesNotMatch(`${html}\n${main}`, previousCopy);
+  assert.match(html, /AuraReader v0\.1\.0/);
+  assert.doesNotMatch(html, /固件加紧开发中/);
+  assert.match(main, /固件 \$\{release\.version\} 已就绪/);
 });
 
 test("the interface gallery becomes one readable column at the tablet breakpoint", async () => {

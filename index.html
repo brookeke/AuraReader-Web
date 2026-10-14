@@ -139,19 +139,23 @@
           <div class="flash-grid">
             <div class="flash-copy">
               <p class="flash-kicker">刷写前确认</p>
-              <h3>固件加紧开发中</h3>
-              <p>正式固件定稿后，这里将开放浏览器直接刷写。当前不会连接设备、下载文件或模拟刷写结果。</p>
+              <h3>AuraReader v0.1.0</h3>
+              <p>连接设备前，请完成右侧三项确认。安装器会识别 ESP32-S3，并将完整固件写入设备内部闪存。</p>
               <a class="text-link hover-line" href="#manual">查看命令行备用说明</a>
             </div>
-            <fieldset class="checklist" disabled>
+            <fieldset class="checklist">
               <legend class="sr-only">刷写前检查项目</legend>
               <label><input type="checkbox" /><span>我的设备是小纸 Pico</span></label>
               <label><input type="checkbox" /><span>正在使用可传输数据的 USB 线</span></label>
-              <label><input type="checkbox" /><span>我了解刷写将替换原厂应用与系统字体</span></label>
-              <button class="button button-disabled" type="button" disabled>固件加紧开发中</button>
+              <label><input type="checkbox" /><span>我已备份重要数据，并了解刷写会改写设备内部闪存</span></label>
+              <esp-web-install-button id="firmware-installer" class="flash-install-button" manifest="./firmware/manifest.json">
+                <button id="flash-button" class="button button-disabled" slot="activate" type="button" disabled>完成确认后开始刷写</button>
+                <p class="flash-compatibility" slot="unsupported">当前浏览器不支持网页刷机，请使用桌面版 Chrome 或 Edge。</p>
+                <p class="flash-compatibility" slot="not-allowed">网页刷机需要通过 HTTPS 安全连接打开。</p>
+              </esp-web-install-button>
             </fieldset>
           </div>
-          <ol class="flash-progress" aria-label="未来刷写流程">
+          <ol class="flash-progress" aria-label="刷写流程">
             <li><span>01</span>连接设备</li><li><span>02</span>校验环境</li><li><span>03</span>写入四分区</li><li><span>04</span>校验数据</li><li><span>05</span>完成</li>
           </ol>
         </div>
@@ -183,6 +187,7 @@
       <p class="footer-credit">Designed by Malus/百变逗比i</p>
       <p class="footer-meta">© <span data-year></span> · 回归阅读本质</p>
     </footer>
-    <script type="module" src="./src/main.ts"></script>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
