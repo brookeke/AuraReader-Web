@@ -136,27 +136,97 @@
             <div><span class="status-dot" aria-hidden="true"></span><span id="release-status" role="status">正在读取固件状态</span></div>
             <span id="browser-status">正在检测浏览器</span>
           </div>
-          <div class="flash-grid">
+          <div class="flash-grid flash-grid-guided">
             <div class="flash-copy">
-              <p class="flash-kicker">刷写前确认</p>
+              <p class="flash-kicker">站内刷写引导</p>
               <h3>AuraReader v0.1.0</h3>
-              <p>连接设备前，请完成右侧三项确认。安装器会识别 ESP32-S3，并将完整固件写入设备内部闪存。</p>
+              <p>操作选择、数据处理、最终确认与写入进度都会留在当前页面。只有选择串口设备时，浏览器会显示系统授权窗口。</p>
               <a class="text-link hover-line" href="#manual">查看命令行备用说明</a>
             </div>
-            <fieldset class="checklist">
-              <legend class="sr-only">刷写前检查项目</legend>
-              <label><input type="checkbox" /><span>我的设备是小纸 Pico</span></label>
-              <label><input type="checkbox" /><span>正在使用可传输数据的 USB 线</span></label>
-              <label><input type="checkbox" /><span>我已备份重要数据，并了解刷写会改写设备内部闪存</span></label>
-              <esp-web-install-button id="firmware-installer" class="flash-install-button" manifest="./firmware/manifest.json">
-                <button id="flash-button" class="button button-disabled" slot="activate" type="button" disabled>完成确认后开始刷写</button>
-                <p class="flash-compatibility" slot="unsupported">当前浏览器不支持网页刷机，请使用桌面版 Chrome 或 Edge。</p>
-                <p class="flash-compatibility" slot="not-allowed">网页刷机需要通过 HTTPS 安全连接打开。</p>
-              </esp-web-install-button>
-            </fieldset>
+            <div class="flash-flow" data-flash-flow>
+              <ol class="flash-flow-steps" aria-label="刷机引导进度">
+                <li data-flow-marker="mode" aria-current="step"><span>01</span>选择操作</li>
+                <li data-flow-marker="erase"><span>02</span>数据处理</li>
+                <li data-flow-marker="confirm"><span>03</span>确认执行</li>
+              </ol>
+
+              <section class="flash-panel" data-flash-panel="mode" aria-labelledby="flash-mode-title">
+                <p class="flash-step-count">步骤 1 / 3</p>
+                <h4 id="flash-mode-title" tabindex="-1">你想进行哪项操作？</h4>
+                <fieldset class="flash-options">
+                  <legend class="sr-only">选择设备操作</legend>
+                  <label class="flash-option">
+                    <input type="radio" name="flash-mode" value="install" data-flash-mode="install" checked />
+                    <span><strong>安装 AuraReader</strong><small>写入 v0.1.0 完整固件</small></span>
+                    <span aria-hidden="true">↓</span>
+                  </label>
+                  <label class="flash-option">
+                    <input type="radio" name="flash-mode" value="console" data-flash-mode="console" />
+                    <span><strong>串口日志</strong><small>查看设备启动与运行输出</small></span>
+                    <span aria-hidden="true">›_</span>
+                  </label>
+                </fieldset>
+                <button class="button button-dark flash-next" type="button" data-flow-next>继续 <span aria-hidden="true">→</span></button>
+              </section>
+
+              <section class="flash-panel" data-flash-panel="erase" aria-labelledby="erase-mode-title" hidden>
+                <p class="flash-step-count">步骤 2 / 3</p>
+                <h4 id="erase-mode-title" tabindex="-1">如何处理设备闪存？</h4>
+                <fieldset class="flash-options">
+                  <legend class="sr-only">选择数据处理方式</legend>
+                  <label class="flash-option">
+                    <input type="radio" name="erase-mode" value="standard" checked />
+                    <span><strong>标准写入</strong><small>覆盖发布镜像涉及的区域，推荐</small></span>
+                    <span class="option-tag">推荐</span>
+                  </label>
+                  <label class="flash-option flash-option-danger">
+                    <input type="radio" name="erase-mode" value="full" />
+                    <span><strong>完整擦除后写入</strong><small>先清空整颗内部闪存，再安装固件</small></span>
+                    <span class="option-tag">清空</span>
+                  </label>
+                </fieldset>
+                <p class="flash-note">两种方式都会改写设备内部闪存；TF 卡不会被写入。遇到旧分区或启动异常时，再选择完整擦除。</p>
+                <div class="flash-actions">
+                  <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
+                  <button class="button button-dark" type="button" data-flow-next="confirm">继续 <span aria-hidden="true">→</span></button>
+                </div>
+              </section>
+
+              <section class="flash-panel" data-flash-panel="confirm" aria-labelledby="flash-confirm-title" hidden>
+                <p class="flash-step-count">步骤 3 / 3</p>
+                <h4 id="flash-confirm-title" tabindex="-1">确认安装 AuraReader</h4>
+                <dl class="flash-summary">
+                  <div><dt>目标设备</dt><dd>ESP32-S3 / 小纸 Pico</dd></div>
+                  <div><dt>固件版本</dt><dd>v0.1.0</dd></div>
+                  <div><dt>写入方式</dt><dd data-erase-summary>标准写入</dd></div>
+                </dl>
+                <label class="flash-confirmation">
+                  <input id="flash-confirmation" type="checkbox" />
+                  <span>我已备份重要数据，并确认写入期间不会断开 USB 连接。</span>
+                </label>
+                <p id="flash-live-status" class="flash-live-status" role="status" aria-live="polite">完成确认后即可选择设备。</p>
+                <div class="flash-actions">
+                  <button class="button button-quiet" type="button" data-flow-back="erase">返回</button>
+                  <button id="flash-button" class="button button-disabled" type="button" disabled>选择设备并开始</button>
+                </div>
+              </section>
+
+              <section class="flash-panel" data-flash-panel="console" aria-labelledby="serial-console-title" hidden>
+                <p class="flash-step-count">串口工具</p>
+                <h4 id="serial-console-title" tabindex="-1">查看设备日志</h4>
+                <p class="flash-note">连接速率为 115200。关闭其他占用串口的软件后，再选择 AuraReader 设备。</p>
+                <pre id="serial-output" class="serial-output" aria-label="串口日志输出" tabindex="0">等待连接…</pre>
+                <p id="console-status" class="flash-live-status" role="status" aria-live="polite">尚未连接设备。</p>
+                <div class="flash-actions">
+                  <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
+                  <button id="console-connect-button" class="button button-dark" type="button">选择设备并连接</button>
+                  <button id="console-disconnect-button" class="button button-quiet" type="button" hidden>断开连接</button>
+                </div>
+              </section>
+            </div>
           </div>
-          <ol class="flash-progress" aria-label="刷写流程">
-            <li><span>01</span>连接设备</li><li><span>02</span>校验环境</li><li><span>03</span>写入四分区</li><li><span>04</span>校验数据</li><li><span>05</span>完成</li>
+          <ol class="flash-progress" aria-label="刷写执行进度">
+            <li data-flash-progress="connect"><span>01</span>连接设备</li><li data-flash-progress="check"><span>02</span>校验环境</li><li data-flash-progress="write"><span>03</span>写入固件</li><li data-flash-progress="verify"><span>04</span>校验数据</li><li data-flash-progress="done"><span>05</span>完成</li>
           </ol>
         </div>
         <aside class="safety-note reveal" aria-labelledby="safety-title">
@@ -187,7 +257,6 @@
       <p class="footer-credit">Designed by Malus/百变逗比i</p>
       <p class="footer-meta">© <span data-year></span> · 回归阅读本质</p>
     </footer>
-    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

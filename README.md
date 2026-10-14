@@ -1,6 +1,6 @@
 # AuraReader 官网
 
-AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明，并通过 ESP Web Tools 提供浏览器刷写。
+AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明，并通过 Espressif esptool-js 提供站内分步刷写与串口日志。
 
 ## 技术栈
 
@@ -51,7 +51,8 @@ pnpm verify
 ├─ screens/                            # 设备界面素材
 ├─ firmware/                           # 网页刷机清单与合并固件
 ├─ scripts/copy-static.mjs             # 将固件复制到 Vite 构建产物
-├─ src/main.js                         # 页面交互与刷机安全门槛
+├─ src/main.js                         # 页面通用交互
+├─ src/web-flasher.js                  # 站内刷写引导、进度与串口日志
 ├─ src/release-service.js              # 固件发布状态接口
 ├─ src/styles.css                      # 响应式样式
 ├─ tests/                              # 静态结构与资源测试
@@ -102,4 +103,4 @@ firmware/v0.1.0/aurareader-v0.1.0.bin
 
 ## 发布说明
 
-当前官网版本为 `1.1.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `1.2.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。

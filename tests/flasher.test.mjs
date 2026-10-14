@@ -33,17 +33,41 @@ test("the merged image matches the verified release artifact", async () => {
   assert.equal(digest, "76d382874ef211e15cde34f42bf55abe4e5e04ddf49554e545fc3fda89729ef8");
 });
 
-test("the installer is gated by browser support and all safety confirmations", async () => {
+test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
+  const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
-  assert.match(html, /esp-web-tools@10\/dist\/web\/install-button\.js\?module/);
-  assert.match(html, /<esp-web-install-button[^>]+manifest="\.\/firmware\/manifest\.json"/s);
-  assert.match(html, /id="flash-button"[^>]+slot="activate"/s);
-  assert.doesNotMatch(html, /<fieldset class="checklist" disabled>/);
-  assert.match(main, /inputs\.every\(\(input\) => input\.checked\)/);
-  assert.match(main, /"serial" in navigator/);
-  assert.match(main, /window\.isSecureContext/);
+  assert.doesNotMatch(html, /esp-web-install-button|esp-web-tools@/);
+  assert.match(html, /data-flash-mode="install"/);
+  assert.match(html, /data-flash-mode="console"/);
+  assert.match(html, /name="erase-mode"[^>]+value="standard"[^>]+checked/s);
+  assert.match(html, /name="erase-mode"[^>]+value="full"/s);
+  assert.match(html, /id="flash-confirmation"/);
+  assert.match(html, /id="flash-live-status"[^>]+role="status"/s);
+  assert.match(main, /setupWebFlasher/);
+  assert.match(flasher, /navigator\.serial\.requestPort/);
+  assert.match(flasher, /ESPLoader/);
+  assert.match(flasher, /eraseAll[,}]/);
+  assert.match(flasher, /writeFlash/);
+  assert.match(flasher, /after\("hard_reset"\)/);
+});
+
+test("the inline flasher exposes testable safety gating", async () => {
+  const { canStartInstall } = await import(new URL("src/web-flasher.js", projectRoot));
+
+  assert.equal(
+    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: true, busy: false }),
+    true,
+  );
+  assert.equal(
+    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: false, busy: false }),
+    false,
+  );
+  assert.equal(
+    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: true, busy: true }),
+    false,
+  );
 });
 
 test("production builds copy the firmware tree into dist", async () => {

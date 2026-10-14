@@ -1,4 +1,5 @@
 import { getReleaseStatus } from "./release-service.js";
+import { setupWebFlasher } from "./web-flasher.js";
 
 document.documentElement.classList.add("js");
 
@@ -97,41 +98,6 @@ function setupFaq() {
   });
 }
 
-function browserCanFlash() {
-  return "serial" in navigator && window.isSecureContext;
-}
-
-function setBrowserStatus() {
-  const status = query("#browser-status");
-  if (!status) return;
-  const supported = browserCanFlash();
-  status.textContent = supported ? "浏览器支持 Web Serial" : "请使用桌面版 Chrome 或 Edge";
-  status.toggleAttribute("data-supported", supported);
-}
-
-function setupFlasher() {
-  const checklist = query(".checklist");
-  const button = query("#flash-button");
-  if (!checklist || !button) return () => {};
-
-  const inputs = queryAll(".checklist input[type='checkbox']");
-  let releaseReady = false;
-
-  const update = (ready = releaseReady) => {
-    releaseReady = ready;
-    const confirmed = inputs.length > 0 && inputs.every((input) => input.checked);
-    const enabled = releaseReady && browserCanFlash() && confirmed;
-    button.disabled = !enabled;
-    button.classList.toggle("button-disabled", !enabled);
-    button.classList.toggle("button-dark", enabled);
-    button.textContent = enabled ? "连接设备并开始刷写" : "完成确认后开始刷写";
-  };
-
-  inputs.forEach((input) => input.addEventListener("change", () => update()));
-  update(false);
-  return update;
-}
-
 async function setReleaseStatus(onReady) {
   const status = query("#release-status");
   if (!status) return;
@@ -154,6 +120,5 @@ setupNavigation();
 setupActiveNavigation();
 setupReveals();
 setupFaq();
-setBrowserStatus();
-const updateFlasher = setupFlasher();
-void setReleaseStatus(updateFlasher);
+const flasher = setupWebFlasher();
+void setReleaseStatus(flasher.setReleaseReady);
