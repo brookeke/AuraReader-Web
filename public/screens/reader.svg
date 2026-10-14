@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="684" height="1216" viewBox="0 0 684 1216">
+  <title>03-reader</title>
+  <rect id="Background" width="684" height="1216" fill="#ffffff"/>
+  <text x="30" y="18" fill="#1c1c1c" font-family="Consolas" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="hanging">17:24</text>
+  <svg id="Battery / High" x="592" y="19" width="38" height="24" viewBox="0 50 256 156">
+    <rect x="16" y="64" width="200" height="128" rx="16" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+    <line x1="136" y1="96" x2="136" y2="160" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+    <line x1="96" y1="96" x2="96" y2="160" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+    <line x1="56" y1="96" x2="56" y2="160" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+    <line x1="248" y1="96" x2="248" y2="160" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  </svg>
+  <text x="638" y="18" fill="#1c1c1c" font-family="Consolas" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="hanging">85%</text>
+  <polyline points="0.00,53.00 684.00,53.00" fill="none" stroke="#1c1c1c" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="40" y="86" width="604" height="1062" fill="#ffffff" stroke="#d8d6d2" stroke-width="1"/>
+  <rect x="48" y="111" width="17" height="17" fill="#1c1c1c" stroke="#1c1c1c" stroke-width="1"/>
+  <text x="84" y="91" fill="#1c1c1c" font-family="Noto Serif CJK SC" font-size="42" font-weight="700" text-anchor="start" dominant-baseline="hanging">第一回</text>
+  <text x="48" y="146" fill="#1c1c1c" font-family="Noto Serif CJK SC" font-size="37" font-weight="700" text-anchor="start" dominant-baseline="hanging">甄士隐梦幻识通灵</text>
+  <text x="48" y="194" fill="#1c1c1c" font-family="Noto Serif CJK SC" font-size="37" font-weight="700" text-anchor="start" dominant-baseline="hanging">贾雨村风尘怀闺秀</text>
+  <g id="Reader body" fill="#1c1c1c" font-family="Noto Serif CJK SC" font-size="27" font-weight="400" text-anchor="start" dominant-baseline="hanging">
+    <text x="106" y="287" font-size="27">此开卷第一回也。作者自云，曾历过</text>
+    <text x="48" y="341" font-size="27">一番梦幻之后，故将真事隐去，而借</text>
+    <text x="48" y="395" font-size="27">“通灵”说此《石头记》一书也，故曰</text>
+    <text x="48" y="449" font-size="27">“甄士隐”云云。但书中所记何事何人？</text>
+    <text x="48" y="503" font-size="27">自己又云：今风尘碌碌，一事无成，</text>
+    <text x="48" y="557" font-size="27">忽念及当日所有之女子，一一细考较去，</text>
+    <text x="48" y="611" font-size="27">觉其行止见识皆出我之上，我堂堂须眉，</text>
+    <text x="48" y="665" font-size="27">诚不若彼裙钗。我实愧则有余，悔又无益，</text>
+    <text x="48" y="719" font-size="27">大无可如何之日也！当此日，欲将已往</text>
+    <text x="48" y="773" font-size="27">所赖天恩祖德，锦衣纨袴之时，饫甘</text>
+    <text x="48" y="827" font-size="27">餍肥之日，背父兄教育之恩，负师友</text>
+    <text x="48" y="881" font-size="27">规训之德，以致今日一技无成、半生</text>
+    <text x="48" y="935" font-size="27">潦倒之罪，编述一集，以告天下。知我</text>
+    <text x="48" y="989" font-size="27">之负罪固多，然闺阁中历历有人，万不可</text>
+    <text x="48" y="1043" font-size="27">因我之不肖，自护己短，一并使其泯灭也。</text>
+  </g>
+  <polyline points="0.00,1172.00 684.00,1172.00" fill="none" stroke="#d8d6d2" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="30" y="1184" fill="#1c1c1c" font-family="Consolas" font-size="15" font-weight="400" text-anchor="start" dominant-baseline="hanging">001 / 960</text>
+  <text x="654" y="1184" fill="#1c1c1c" font-family="Noto Serif CJK SC" font-size="14" font-weight="400" text-anchor="end" dominant-baseline="auto">第一回  甄士隐梦幻识通灵  贾雨村风尘怀闺秀</text>
+</svg>
+

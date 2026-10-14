@@ -1,0 +1,20 @@
+{
+  "name": "aurareader-website",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "test": "node --test",
+    "verify": "pnpm run check && pnpm run test && pnpm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
+
