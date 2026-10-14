@@ -70,6 +70,19 @@ test("the inline flasher exposes testable safety gating", async () => {
   );
 });
 
+test("the guided steps keep a stable work area and aligned actions", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+
+  assert.match(html, /data-flow-marker="mode"[^>]*><span>01<\/span>开始安装<\/li>/);
+  assert.doesNotMatch(html, /class="safety-note/);
+  assert.doesNotMatch(html, /重要提示/);
+  assert.match(css, /\.flash-workbench\s*\{[^}]*grid-column:\s*1\s*\/\s*-1;/s);
+  assert.match(css, /\.flash-flow\s*\{[^}]*min-height:\s*44rem;[^}]*display:\s*grid;/s);
+  assert.match(css, /\.flash-panel:not\(\[hidden\]\)\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;/s);
+  assert.match(css, /\.flash-panel-actions\s*\{[^}]*margin-top:\s*auto;/s);
+});
+
 test("production builds copy the firmware tree into dist", async () => {
   const buildScript = await readFile(new URL("scripts/copy-static.mjs", projectRoot), "utf8");
   assert.match(buildScript, /cp\(source, destination, \{ recursive: true \}\)/);

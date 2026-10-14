@@ -145,7 +145,7 @@
             </div>
             <div class="flash-flow" data-flash-flow>
               <ol class="flash-flow-steps" aria-label="刷机引导进度">
-                <li data-flow-marker="mode" aria-current="step"><span>01</span>选择操作</li>
+                <li data-flow-marker="mode" aria-current="step"><span>01</span>开始安装</li>
                 <li data-flow-marker="erase"><span>02</span>数据处理</li>
                 <li data-flow-marker="confirm"><span>03</span>确认执行</li>
               </ol>
@@ -166,7 +166,9 @@
                     <span aria-hidden="true">›_</span>
                   </label>
                 </fieldset>
-                <button class="button button-dark flash-next" type="button" data-flow-next>继续 <span aria-hidden="true">→</span></button>
+                <div class="flash-panel-actions flash-panel-actions-single">
+                  <button class="button button-dark" type="button" data-flow-next>继续 <span aria-hidden="true">→</span></button>
+                </div>
               </section>
 
               <section class="flash-panel" data-flash-panel="erase" aria-labelledby="erase-mode-title" hidden>
@@ -186,7 +188,7 @@
                   </label>
                 </fieldset>
                 <p class="flash-note">两种方式都会改写设备内部闪存；TF 卡不会被写入。遇到旧分区或启动异常时，再选择完整擦除。</p>
-                <div class="flash-actions">
+                <div class="flash-panel-actions">
                   <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
                   <button class="button button-dark" type="button" data-flow-next="confirm">继续 <span aria-hidden="true">→</span></button>
                 </div>
@@ -205,7 +207,7 @@
                   <span>我已备份重要数据，并确认写入期间不会断开 USB 连接。</span>
                 </label>
                 <p id="flash-live-status" class="flash-live-status" role="status" aria-live="polite">完成确认后即可选择设备。</p>
-                <div class="flash-actions">
+                <div class="flash-panel-actions">
                   <button class="button button-quiet" type="button" data-flow-back="erase">返回</button>
                   <button id="flash-button" class="button button-disabled" type="button" disabled>选择设备并开始</button>
                 </div>
@@ -217,7 +219,7 @@
                 <p class="flash-note">连接速率为 115200。关闭其他占用串口的软件后，再选择 AuraReader 设备。</p>
                 <pre id="serial-output" class="serial-output" aria-label="串口日志输出" tabindex="0">等待连接…</pre>
                 <p id="console-status" class="flash-live-status" role="status" aria-live="polite">尚未连接设备。</p>
-                <div class="flash-actions">
+                <div class="flash-panel-actions">
                   <button class="button button-quiet" type="button" data-flow-back="mode">返回</button>
                   <button id="console-connect-button" class="button button-dark" type="button">选择设备并连接</button>
                   <button id="console-disconnect-button" class="button button-quiet" type="button" hidden>断开连接</button>
@@ -229,11 +231,6 @@
             <li data-flash-progress="connect"><span>01</span>连接设备</li><li data-flash-progress="check"><span>02</span>校验环境</li><li data-flash-progress="write"><span>03</span>写入固件</li><li data-flash-progress="verify"><span>04</span>校验数据</li><li data-flash-progress="done"><span>05</span>完成</li>
           </ol>
         </div>
-        <aside class="safety-note reveal" aria-labelledby="safety-title">
-          <p class="label">重要提示</p>
-          <h3 id="safety-title">不要把单独的应用固件写入 0x0。</h3>
-          <p>完整刷写需要四个分区。错误写入可能覆盖启动程序与分区信息；墨水屏仍保留旧画面，并不代表设备仍在运行。</p>
-        </aside>
       </section>
 
       <section id="manual" class="support section-shell ink-section" aria-labelledby="support-title">
