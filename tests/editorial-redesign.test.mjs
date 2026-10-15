@@ -21,6 +21,15 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
+test("key editorial headings stay intact across browser font metrics", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+
+  assert.match(html, /id="faq-title">常见问题，<br\s*\/><span>逐一解答。<\/span><\/h2>/);
+  assert.match(css, /#hero-title,[^}]*#guide-title,[^}]*#changelog-title[^}]*\{[^}]*white-space:\s*nowrap;/s);
+  assert.match(css, /#hero-title,[^}]*#guide-title,[^}]*#changelog-title[^}]*font-size:\s*clamp\(2\.4rem,\s*5\.5vw,\s*5\.6rem\)/s);
+});
+
 test("the visual system stays flat, square and monochrome", async () => {
   const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
 
