@@ -9,9 +9,9 @@
   --sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --page: min(100% - 6rem, 88rem);
   --motion-fast: 180ms;
-  --motion-reveal: 680ms;
-  --motion-image: 1100ms;
-  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-reveal: 960ms;
+  --motion-image: 1500ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   color: var(--ink);
   background: var(--paper);
   font-family: var(--sans);
@@ -281,13 +281,13 @@ main { padding-top: 5.5rem; }
   transition: opacity var(--motion-reveal) var(--motion-ease), transform var(--motion-reveal) var(--motion-ease);
 }
 .js .reveal-sequence[data-visible] > * { opacity: 1; transform: none; }
-.js .reveal-sequence > :nth-child(2) { transition-delay: 70ms; }
-.js .reveal-sequence > :nth-child(3) { transition-delay: 140ms; }
-.js .reveal-sequence > :nth-child(4) { transition-delay: 210ms; }
+.js .reveal-sequence > :nth-child(2) { transition-delay: 140ms; }
+.js .reveal-sequence > :nth-child(3) { transition-delay: 280ms; }
+.js .reveal-sequence > :nth-child(4) { transition-delay: 420ms; }
 .js .reveal-clip { opacity: 1; transform: none; }
 .js .reveal-clip .screen-frame {
   clip-path: inset(0 0 100%);
-  transition: clip-path 900ms var(--motion-ease);
+  transition: clip-path 1400ms var(--motion-ease);
   transition-delay: var(--reveal-delay, 0ms);
 }
 .js .reveal-clip .screen-frame img {
@@ -299,7 +299,7 @@ main { padding-top: 5.5rem; }
   opacity: 0;
   transform: translateY(0.5rem);
   transition: opacity var(--motion-reveal) var(--motion-ease), transform var(--motion-reveal) var(--motion-ease);
-  transition-delay: calc(var(--reveal-delay, 0ms) + 160ms);
+  transition-delay: calc(var(--reveal-delay, 0ms) + 260ms);
 }
 .js .reveal-clip[data-visible] .screen-frame { clip-path: inset(0); }
 .js .reveal-clip[data-visible] .screen-frame img,
@@ -313,7 +313,7 @@ main { padding-top: 5.5rem; }
   content: "";
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 850ms var(--motion-ease);
+  transition: transform 1100ms var(--motion-ease);
 }
 .js .section-heading-light.reveal::before { background: rgba(249, 248, 246, 0.16); }
 .js .section-heading.reveal[data-visible]::before { transform: scaleX(1); }

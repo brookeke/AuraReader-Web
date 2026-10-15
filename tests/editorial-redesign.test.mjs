@@ -78,10 +78,16 @@ test("editorial motion reveals copy, image masks and grouped items with one rhyt
   assert.match(html, /class="hero-visual reveal reveal-clip"/);
   assert.match(html, /class="advantage-list" data-reveal-group/);
   assert.match(html, /class="screen-gallery" data-reveal-group/);
-  assert.match(css, /--motion-reveal:\s*680ms;/);
+  assert.match(css, /--motion-reveal:\s*960ms;/);
+  assert.match(css, /--motion-image:\s*1500ms;/);
+  assert.match(css, /--motion-ease:\s*cubic-bezier\(0\.22,\s*1,\s*0\.36,\s*1\);/);
+  assert.match(css, /\.js \.reveal-sequence > :nth-child\(4\)\s*\{\s*transition-delay:\s*420ms;/);
   assert.match(css, /\.js \.reveal-clip \.screen-frame\s*\{[^}]*clip-path:\s*inset\(0 0 100%\);/s);
+  assert.match(css, /transition:\s*clip-path 1400ms var\(--motion-ease\);/);
+  assert.match(css, /transition-delay:\s*calc\(var\(--reveal-delay, 0ms\) \+ 260ms\);/);
+  assert.match(css, /transition:\s*transform 1100ms var\(--motion-ease\);/);
   assert.match(css, /\.js \.screen-card\.reveal-clip\[data-visible\] \.screen-frame:hover img\s*\{[^}]*transform:\s*scale\(1\.018\);/s);
-  assert.match(main, /setProperty\("--reveal-delay",\s*`\$\{Math\.min\(index, 5\) \* 45\}ms`\)/);
+  assert.match(main, /setProperty\("--reveal-delay",\s*`\$\{Math\.min\(index, 5\) \* 90\}ms`\)/);
 });
 
 test("editorial motion resolves immediately when reduced motion is requested", async () => {

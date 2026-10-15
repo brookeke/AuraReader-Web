@@ -112,7 +112,7 @@ function setupReveals() {
     [...group.children]
       .filter((item) => item.classList.contains("reveal"))
       .forEach((item, index) => {
-        item.style.setProperty("--reveal-delay", `${Math.min(index, 5) * 45}ms`);
+        item.style.setProperty("--reveal-delay", `${Math.min(index, 5) * 90}ms`);
       });
   });
 
