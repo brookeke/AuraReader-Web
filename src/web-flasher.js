@@ -1,5 +1,4 @@
 const ESPTOOL_MODULE_URL = "https://unpkg.com/esptool-js@0.6.1/bundle.js";
-const FIRMWARE_URL = "./firmware/v0.1.0/aurareader-v0.1.0.bin";
 
 export function canStartInstall({ releaseReady, browserSupported, confirmed, busy }) {
   return releaseReady && browserSupported && confirmed && !busy;
@@ -17,12 +16,14 @@ function errorMessage(error) {
 
 export function setupWebFlasher() {
   const root = document.querySelector("[data-flasher]");
-  if (!root) return { setReleaseReady() {} };
+  if (!root) return { setReleases() {} };
 
   const flow = root.querySelector("[data-flash-flow]");
   const panels = [...root.querySelectorAll("[data-flash-panel]")];
   const markers = [...root.querySelectorAll("[data-flow-marker]")];
   const eraseInputs = [...root.querySelectorAll("[name='erase-mode']")];
+  const versionOptions = root.querySelector("[data-version-options]");
+  const versionSummary = root.querySelector("[data-version-summary]");
   const confirmation = root.querySelector("#flash-confirmation");
   const flashButton = root.querySelector("#flash-button");
   const liveStatus = root.querySelector("#flash-live-status");
@@ -32,12 +33,60 @@ export function setupWebFlasher() {
   const browserSupported = hasWebSerial();
   let releaseReady = false;
   let busy = false;
+  let releases = [];
+  let selectedRelease = null;
 
   browserStatus.textContent = browserSupported ? "浏览器支持 Web Serial" : "请使用桌面版 Chrome 或 Edge";
   browserStatus.toggleAttribute("data-supported", browserSupported);
 
   function selectedValue(inputs) {
     return inputs.find((input) => input.checked)?.value;
+  }
+
+  function selectRelease(version) {
+    selectedRelease = releases.find((release) => release.version === version) ?? releases[0] ?? null;
+    if (versionSummary) versionSummary.textContent = selectedRelease ? `v${selectedRelease.version}` : "—";
+  }
+
+  function renderReleaseOptions(nextReleases) {
+    releases = nextReleases.slice(0, 2);
+    selectedRelease = releases[0] ?? null;
+    if (!versionOptions) return;
+    versionOptions.replaceChildren();
+
+    releases.forEach((release, index) => {
+      const label = document.createElement("label");
+      label.className = "flash-option";
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "firmware-version";
+      input.value = release.version;
+      input.dataset.firmwareVersion = release.version;
+      input.checked = index === 0;
+      input.addEventListener("change", () => selectRelease(input.value));
+
+      const copy = document.createElement("span");
+      copy.className = "option-copy";
+      const title = document.createElement("strong");
+      title.textContent = `AuraReader v${release.version}`;
+      const description = document.createElement("small");
+      description.textContent = `${release.channel === "stable" ? "稳定版" : release.channel} · 完整固件`;
+      copy.append(title, description);
+
+      const tag = document.createElement("span");
+      tag.className = "option-tag";
+      tag.textContent = index === 0 ? "当前版本" : "可安装";
+      label.append(input, copy, tag);
+      versionOptions.append(label);
+    });
+
+    if (releases.length === 0) {
+      const unavailable = document.createElement("p");
+      unavailable.className = "release-unavailable";
+      unavailable.textContent = "当前没有可安装的固件版本。";
+      versionOptions.append(unavailable);
+    }
+    selectRelease(selectedRelease?.version);
   }
 
   function showPanel(name) {
@@ -112,7 +161,7 @@ export function setupWebFlasher() {
   confirmation?.addEventListener("change", updateInstallButton);
 
   flashButton?.addEventListener("click", async () => {
-    if (!canStartInstall({ releaseReady, browserSupported, confirmed: confirmation.checked, busy })) return;
+    if (!canStartInstall({ releaseReady, browserSupported, confirmed: confirmation.checked, busy }) || !selectedRelease) return;
 
     let transport;
     busy = true;
@@ -146,7 +195,7 @@ export function setupWebFlasher() {
 
       setProgress("write");
       setLiveStatus("正在下载固件并准备写入…", "working");
-      const response = await fetch(new URL(FIRMWARE_URL, window.location.href));
+      const response = await fetch(new URL(selectedRelease.path, window.location.href));
       if (!response.ok) throw new Error(`固件下载失败（HTTP ${response.status}）。`);
       const firmware = new Uint8Array(await response.arrayBuffer());
       const eraseAll = selectedValue(eraseInputs) === "full";
@@ -186,8 +235,9 @@ export function setupWebFlasher() {
   updateInstallButton();
 
   return {
-    setReleaseReady(ready) {
-      releaseReady = ready;
+    setReleases(nextReleases) {
+      renderReleaseOptions(Array.isArray(nextReleases) ? nextReleases : []);
+      releaseReady = releases.length > 0;
       updateInstallButton();
     },
   };

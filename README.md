@@ -1,6 +1,6 @@
 # AuraReader 官网
 
-AuraReader 的中文单页官网，可直接托管在 GitHub Pages。当前版本展示固件理念、功能、使用说明，并通过 Espressif esptool-js 提供包含版本选择的站内分步刷写。
+AuraReader 的中文单页官网，可直接托管在 GitHub Pages。新版以编辑式信息架构呈现固件理念、真实界面、使用说明、Wi-Fi 传书、更新日志与常见问题，并通过 Espressif esptool-js 提供包含版本选择的站内分步刷写。
 
 ## 技术栈
 
@@ -69,7 +69,7 @@ pnpm verify
 2. `VITE_RELEASE_MANIFEST_URL`：读取静态 JSON 清单
 3. 两者均未配置：读取 `firmware/manifest.json`
 
-响应只接受以下两种可扩展结构：
+接口支持待发布、单版本或多版本目录。多版本目录最多在页面展示前两个版本：
 
 ```json
 { "state": "pending" }
@@ -79,7 +79,17 @@ pnpm verify
 {
   "state": "available",
   "version": "1.0.0",
-  "publishedAt": "2026-10-14T00:00:00Z"
+  "publishedAt": "2026-10-14T00:00:00Z",
+  "path": "https://example.com/aurareader-v1.0.0.bin"
+}
+```
+
+```json
+{
+  "releases": [
+    { "version": "1.1.0", "channel": "stable", "path": "https://example.com/aurareader-v1.1.0.bin" },
+    { "version": "1.0.0", "channel": "stable", "path": "https://example.com/aurareader-v1.0.0.bin" }
+  ]
 }
 ```
 
@@ -103,5 +113,5 @@ firmware/v0.1.0/aurareader-v0.1.0.bin
 
 ## 发布说明
 
-当前官网版本为 `1.3.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `2.0.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
 

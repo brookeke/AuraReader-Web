@@ -3,241 +3,239 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AuraReader 是为小纸 Pico 打造的随身极简阅读固件。" />
-    <meta name="theme-color" content="#F9F8F6" />
+    <meta name="theme-color" content="#f9f8f6" />
+    <meta name="description" content="AuraReader 是面向 ESP32-S3 阅读设备的随身极简阅读固件。了解设计、使用方法，并在浏览器中安全刷写固件。" />
+    <title>AuraReader / 余白 — 回归阅读本质</title>
     <link rel="stylesheet" href="./src/styles.css" />
-    <title>AuraReader · 回归阅读本质</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
-    <header class="site-header" data-header>
-      <a class="wordmark hover-line" href="#top" aria-label="AuraReader 首页">AURA READER</a>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="AuraReader 首页">AURA READER <span aria-hidden="true">/ 余白</span></a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-        <span>菜单</span>
-        <span class="menu-mark" aria-hidden="true"></span>
+        <span>菜单</span><i aria-hidden="true"></i>
       </button>
-      <nav id="site-nav" class="site-nav" aria-label="主要导航">
-        <a class="hover-line" href="#philosophy">设计理念</a>
-        <a class="hover-line" href="#features">固件能力</a>
-        <a class="hover-line" href="#guide">使用说明</a>
-        <a class="nav-cta" href="#flash">开始刷机 <span aria-hidden="true">↘</span></a>
+      <nav id="site-nav" aria-label="主要导航">
+        <a href="#introduction">固件介绍</a>
+        <a href="#flasher">开始刷机</a>
+        <a href="#guide">使用说明</a>
+        <a href="#changelog">更新日志</a>
+        <a href="#faq">常见问题</a>
       </nav>
     </header>
 
     <main id="main-content">
-      <section id="top" class="hero section-shell" aria-labelledby="hero-title">
+      <section class="hero section-shell" id="top" aria-labelledby="hero-title">
         <div class="hero-copy reveal">
-          <p class="label">AuraReader / 小纸 Pico</p>
-          <h1 id="hero-title">余白<br><em>回归阅读本质</em></h1>
-          <p class="hero-deck">为小纸 Pico 打造的随身极简阅读固件。让页面只留下文字，把正在读的书，安放在眼前。</p>
+          <p class="eyebrow">AURAREADER / ESP32-S3 READING FIRMWARE</p>
+          <h1 id="hero-title">回归阅读本质。</h1>
+          <p class="hero-lead">为专注阅读而设计的随身固件。没有信息流，没有多余提醒，让文字重新成为设备的中心。</p>
           <div class="hero-actions">
-            <a class="button button-dark" href="#flash">开始刷机 <span aria-hidden="true">↓</span></a>
-            <a class="text-link hover-line" href="#philosophy">认识 AuraReader</a>
+            <a class="button button-dark" href="#flasher">开始刷机 <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#introduction">了解 AuraReader <span aria-hidden="true">→</span></a>
           </div>
         </div>
-        <figure class="hero-visual reveal" aria-label="AuraReader 设备首页界面">
+        <figure class="hero-visual reveal">
           <div class="screen-frame screen-frame-hero">
-            <img src="./screens/home.svg" alt="AuraReader 首页，显示最近阅读书籍与设备状态" width="684" height="1216" />
+            <img src="./screens/home.svg" alt="AuraReader 主界面，展示最近阅读的三本书" width="800" height="1280" />
           </div>
-          <figcaption><span>01</span><span>首页 / 684 × 1216</span></figcaption>
+          <figcaption><span>01 / 真实界面</span><span>主界面与本地书库</span></figcaption>
         </figure>
-        <div class="hero-index" aria-hidden="true">AR—01</div>
+        <dl class="spec-rail reveal">
+          <div><dt>设备</dt><dd>ESP32-S3</dd></div>
+          <div><dt>阅读</dt><dd>TXT / EPUB</dd></div>
+          <div><dt>传输</dt><dd>TF 卡 / Wi-Fi</dd></div>
+          <div><dt>版本</dt><dd>v0.1.0</dd></div>
+        </dl>
       </section>
 
-      <section id="philosophy" class="philosophy section-shell ruled" aria-labelledby="philosophy-title">
-        <div class="section-heading reveal">
-          <h2 id="philosophy-title">不是更多功能，<br><em>而是更少打扰。</em></h2>
-        </div>
-        <div class="philosophy-body reveal">
-          <p class="standfirst">AuraReader 从一块墨水屏开始，重新思考一台随身阅读器真正需要留下什么。</p>
-          <p>它没有彩色通知、信息流与即时同步。翻页时，设备只做一件事：安静、清晰地呈现文字。书籍留在本地，进度留在设备，常用操作一步抵达。</p>
-          <dl class="fact-list">
-            <div><dt>屏幕</dt><dd>4.7 英寸电子墨水屏</dd></div>
-            <div><dt>分辨率</dt><dd>684 × 1216</dd></div>
-            <div><dt>核心</dt><dd>ESP32-S3</dd></div>
-            <div><dt>存储</dt><dd>TF 卡本地书库</dd></div>
-          </dl>
-        </div>
-      </section>
-
-      <section class="interface section-shell ink-section" aria-labelledby="interface-title">
-        <div class="interface-heading reveal">
-          <h2 id="interface-title">让页面，<br><em class="heading-line">只留下文字。</em></h2>
-          <p>所有画面均来自 AuraReader 的真实界面设计，不是概念渲染。</p>
-        </div>
-        <div class="screen-gallery">
-          <figure class="screen-card reveal">
-            <div class="screen-frame"><img src="./screens/reader.svg" alt="AuraReader 纯文字阅读界面" width="684" height="1216" loading="lazy" /></div>
-            <figcaption><span>阅读</span><span>沉浸式正文</span></figcaption>
-          </figure>
-          <figure class="screen-card screen-card-offset reveal">
-            <div class="screen-frame"><img src="./screens/typography.svg" alt="AuraReader 字体、字号和行距设置界面" width="684" height="1216" loading="lazy" /></div>
-            <figcaption><span>排版</span><span>按阅读习惯设定</span></figcaption>
-          </figure>
-          <figure class="screen-card reveal">
-            <div class="screen-frame"><img src="./screens/stats.svg" alt="AuraReader 阅读统计界面" width="684" height="1216" loading="lazy" /></div>
-            <figcaption><span>统计</span><span>时间清晰留存</span></figcaption>
-          </figure>
+      <section class="introduction section-shell" id="introduction" aria-labelledby="introduction-title">
+        <header class="section-heading reveal">
+          <p class="section-index">01 / 固件介绍</p>
+          <h2 id="introduction-title">少一点功能，<br /><span>多一点阅读。</span></h2>
+          <p>AuraReader 不试图成为另一台万能设备。它把有限的屏幕、算力与注意力，都留给一本正在阅读的书。</p>
+        </header>
+        <blockquote class="editorial-quote reveal">
+          <p>“随身极简阅读，<br />回归阅读本质。”</p>
+          <footer>— AURAREADER DESIGN PRINCIPLE</footer>
+        </blockquote>
+        <div class="advantage-list">
+          <article class="advantage reveal"><span>01</span><h3>专注阅读</h3><p>克制的界面与清晰的信息层级，让每次打开设备都直接回到文字。</p></article>
+          <article class="advantage reveal"><span>02</span><h3>舒适排版</h3><p>字体、字号与行距可调，把有限屏幕整理成更自然的阅读节奏。</p></article>
+          <article class="advantage reveal"><span>03</span><h3>本地书库</h3><p>书籍存放在 TF 卡中，不依赖账户、订阅或持续在线服务。</p></article>
+          <article class="advantage reveal"><span>04</span><h3>阅读留存</h3><p>自动记录进度与阅读时间，让中断后的每一次返回都更从容。</p></article>
+          <article class="advantage reveal"><span>05</span><h3>轻量连接</h3><p>需要时通过 Wi-Fi 传书，完成后重新回到离线、安静的阅读状态。</p></article>
         </div>
       </section>
 
-      <section id="features" class="features section-shell" aria-labelledby="features-title">
-        <div class="section-heading reveal">
-          <h2 id="features-title">阅读所需，<br><em>恰到好处。</em></h2>
+      <section class="interface-section" aria-labelledby="interface-title">
+        <div class="section-shell">
+          <header class="section-heading section-heading-light reveal">
+            <p class="section-index">02 / 界面一览</p>
+            <h2 id="interface-title">让页面，<br /><span>只留下文字。</span></h2>
+            <p>以下画面均来自 AuraReader 的真实界面设计，不是概念渲染。</p>
+          </header>
+          <div class="screen-gallery">
+            <figure class="screen-card reveal">
+              <div class="screen-frame"><img src="./screens/reader.svg" alt="AuraReader 沉浸式正文阅读界面" width="800" height="1280" /></div>
+              <figcaption><span>阅读</span><span>沉浸式正文</span></figcaption>
+            </figure>
+            <figure class="screen-card screen-card-offset reveal">
+              <div class="screen-frame"><img src="./screens/typography.svg" alt="AuraReader 字体、字号与行距排版设置界面" width="800" height="1280" /></div>
+              <figcaption><span>排版</span><span>按阅读习惯设定</span></figcaption>
+            </figure>
+            <figure class="screen-card reveal">
+              <div class="screen-frame"><img src="./screens/stats.svg" alt="AuraReader 阅读时间与书目统计界面" width="800" height="1280" /></div>
+              <figcaption><span>统计</span><span>时间清晰留存</span></figcaption>
+            </figure>
+          </div>
         </div>
-        <ol class="feature-list">
-          <li class="feature-row reveal">
-            <span class="feature-number">01</span>
-            <div><h3>沉浸阅读</h3><p>读取 UTF-8、GBK 编码的 TXT 与文本型 EPUB，支持目录、书签和每本书的独立进度。</p></div>
-            <span class="feature-mark" aria-hidden="true">Aa</span>
-          </li>
-          <li class="feature-row reveal">
-            <span class="feature-number">02</span>
-            <div><h3>精细排版</h3><p>调整字体、字号与行距，让每一本书都以适合你的密度呈现。</p></div>
-            <span class="feature-mark" aria-hidden="true">行</span>
-          </li>
-          <li class="feature-row reveal">
-            <span class="feature-number">03</span>
-            <div><h3>本地书库</h3><p>书籍存放在 TF 卡中；最近阅读、进度和阅读统计都在设备上清晰可见。</p></div>
-            <span class="feature-mark" aria-hidden="true">册</span>
-          </li>
-          <li class="feature-row reveal">
-            <span class="feature-number">04</span>
-            <div><h3>简单传书</h3><p>设备创建局域网页面后，即可从同一 Wi‑Fi 下的浏览器上传书籍，无需安装桌面客户端。</p></div>
-            <span class="feature-mark" aria-hidden="true">传</span>
-          </li>
-        </ol>
       </section>
 
-      <section id="guide" class="guide section-shell ruled" aria-labelledby="guide-title">
-        <div class="guide-intro reveal">
-          <h2 id="guide-title">三步，<br><em>开始阅读。</em></h2>
-          <p>首版网页刷机面向桌面版 Chrome 与 Edge。准备一根可传输数据的 USB 线，整个过程无需安装桌面应用。</p>
-        </div>
-        <ol class="steps">
-          <li class="step reveal"><span>01</span><div><h3>连接设备</h3><p>使用 USB 数据线将小纸 Pico 连接到电脑，并关闭可能占用串口的软件。</p></div></li>
-          <li class="step reveal"><span>02</span><div><h3>确认与写入</h3><p>核对设备型号和刷写影响。网页会依次写入启动程序、分区表、AuraReader 与系统字体。</p></div></li>
-          <li class="step reveal"><span>03</span><div><h3>放入书籍</h3><p>重启后插入 TF 卡，或通过设备提供的局域网页面传入书籍，即可回到阅读。</p></div></li>
-        </ol>
-      </section>
+      <section class="flasher-section section-shell" id="flasher" aria-labelledby="flasher-title">
+        <header class="section-heading reveal">
+          <p class="section-index">03 / WEB FLASHER</p>
+          <h2 id="flasher-title">从浏览器，<br /><span>写入 AuraReader。</span></h2>
+          <p>连接设备、选择版本并确认写入。刷机过程留在当前页面，仅在选择串口时调用浏览器系统窗口。</p>
+        </header>
 
-      <section class="closing section-shell" aria-labelledby="closing-title">
-        <h2 id="closing-title" class="reveal">此刻，<br><em>留给自己。</em></h2>
-        <a class="button button-dark reveal" href="#flash">前往刷机入口 <span aria-hidden="true">↓</span></a>
-      </section>
-
-      <section id="flash" class="flash-section section-shell" aria-labelledby="flash-title">
-        <div class="flash-heading reveal">
-          <p class="label">开始使用 / Web Flasher</p>
-          <h2 id="flash-title"><span class="heading-line">把 AuraReader，</span><br><em class="heading-line">写入你的设备。</em></h2>
-        </div>
         <div class="flash-workbench reveal" data-flasher>
           <div class="flash-status-line">
-            <div><span class="status-dot" aria-hidden="true"></span><span id="release-status" role="status">正在读取固件状态</span></div>
-            <span id="browser-status">正在检测浏览器</span>
+            <span id="release-status">正在读取固件状态</span>
+            <span id="browser-status">正在检查浏览器</span>
           </div>
-          <div class="flash-grid flash-grid-guided">
-            <div class="flash-copy">
-              <p class="flash-kicker">站内刷写引导</p>
-              <h3>AuraReader v0.1.0</h3>
-              <p>版本选择、数据处理、最终确认与写入进度都会留在当前页面。只有选择串口设备时，浏览器会显示系统授权窗口。</p>
-              <a class="text-link hover-line" href="#manual">查看命令行备用说明</a>
-            </div>
-            <div class="flash-flow" data-flash-flow>
-              <ol class="flash-flow-steps" aria-label="刷机引导进度">
+          <div class="flash-workbench-grid">
+            <aside class="flash-intro">
+              <p class="micro-label">站内刷写引导</p>
+              <h3>AuraReader<br />v0.1.0</h3>
+              <p>三个步骤完成版本选择、数据处理与最终确认。设备选择由浏览器安全窗口完成。</p>
+              <a class="text-link" href="#faq">查看刷机问题 <span aria-hidden="true">→</span></a>
+            </aside>
+
+            <div class="flash-flow" data-flash-flow data-active-panel="version">
+              <ol class="flash-flow-markers" aria-label="安装步骤">
                 <li data-flow-marker="version" aria-current="step"><span>01</span>开始安装</li>
                 <li data-flow-marker="erase"><span>02</span>数据处理</li>
                 <li data-flow-marker="confirm"><span>03</span>确认执行</li>
               </ol>
 
               <section class="flash-panel" data-flash-panel="version" aria-labelledby="flash-version-title">
-                <p class="flash-step-count">步骤 1 / 3</p>
+                <p class="step-count">步骤 1 / 3</p>
                 <h4 id="flash-version-title" tabindex="-1">选择安装版本</h4>
-                <fieldset class="flash-options">
-                  <legend class="sr-only">选择 AuraReader 固件版本</legend>
+                <fieldset class="version-options" data-version-options>
+                  <legend class="visually-hidden">固件版本</legend>
                   <label class="flash-option">
                     <input type="radio" name="firmware-version" value="0.1.0" data-firmware-version="0.1.0" checked />
-                    <span><strong>AuraReader v0.1.0</strong><small>稳定版 · 完整固件</small></span>
+                    <span class="option-copy"><strong>AuraReader v0.1.0</strong><small>稳定版 · 完整固件</small></span>
                     <span class="option-tag">当前版本</span>
                   </label>
                 </fieldset>
-                <div class="flash-panel-actions flash-panel-actions-single">
-                  <button class="button button-dark" type="button" data-flow-next>继续 <span aria-hidden="true">→</span></button>
-                </div>
+                <div class="flash-panel-actions"><span></span><button class="button button-dark" type="button" data-flow-next="erase">下一步 <span aria-hidden="true">→</span></button></div>
               </section>
 
-              <section class="flash-panel" data-flash-panel="erase" aria-labelledby="erase-mode-title" hidden>
-                <p class="flash-step-count">步骤 2 / 3</p>
-                <h4 id="erase-mode-title" tabindex="-1">如何处理设备闪存？</h4>
-                <fieldset class="flash-options">
-                  <legend class="sr-only">选择数据处理方式</legend>
+              <section class="flash-panel" data-flash-panel="erase" aria-labelledby="flash-erase-title" hidden>
+                <p class="step-count">步骤 2 / 3</p>
+                <h4 id="flash-erase-title" tabindex="-1">怎样处理设备数据？</h4>
+                <fieldset class="erase-options">
+                  <legend class="visually-hidden">数据处理方式</legend>
                   <label class="flash-option">
                     <input type="radio" name="erase-mode" value="standard" checked />
-                    <span><strong>标准写入</strong><small>覆盖发布镜像涉及的区域，推荐</small></span>
-                    <span class="option-tag">推荐</span>
+                    <span class="option-copy"><strong>标准写入</strong><small>保留可保留的数据，适合日常更新</small></span>
+                    <span class="option-tag">建议</span>
                   </label>
-                  <label class="flash-option flash-option-danger">
+                  <label class="flash-option">
                     <input type="radio" name="erase-mode" value="full" />
-                    <span><strong>完整擦除后写入</strong><small>先清空整颗内部闪存，再安装固件</small></span>
-                    <span class="option-tag">清空</span>
+                    <span class="option-copy"><strong>完整擦除</strong><small>清除设备全部数据后重新写入</small></span>
                   </label>
                 </fieldset>
-                <p class="flash-note">两种方式都会改写设备内部闪存；TF 卡不会被写入。遇到旧分区或启动异常时，再选择完整擦除。</p>
-                <div class="flash-panel-actions">
-                  <button class="button button-quiet" type="button" data-flow-back="version">返回</button>
-                  <button class="button button-dark" type="button" data-flow-next="confirm">继续 <span aria-hidden="true">→</span></button>
-                </div>
+                <div class="flash-panel-actions"><button class="text-button" type="button" data-flow-back="version">← 返回</button><button class="button button-dark" type="button" data-flow-next="confirm">下一步 <span aria-hidden="true">→</span></button></div>
               </section>
 
               <section class="flash-panel" data-flash-panel="confirm" aria-labelledby="flash-confirm-title" hidden>
-                <p class="flash-step-count">步骤 3 / 3</p>
-                <h4 id="flash-confirm-title" tabindex="-1">确认安装 AuraReader</h4>
+                <p class="step-count">步骤 3 / 3</p>
+                <h4 id="flash-confirm-title" tabindex="-1">确认后开始写入</h4>
                 <dl class="flash-summary">
-                  <div><dt>目标设备</dt><dd>ESP32-S3 / 小纸 Pico</dd></div>
-                  <div><dt>固件版本</dt><dd>v0.1.0</dd></div>
-                  <div><dt>写入方式</dt><dd data-erase-summary>标准写入</dd></div>
+                  <div><dt>固件版本</dt><dd data-version-summary>v0.1.0</dd></div>
+                  <div><dt>设备型号</dt><dd>ESP32-S3</dd></div>
+                  <div><dt>数据处理</dt><dd data-erase-summary>标准写入</dd></div>
                 </dl>
-                <label class="flash-confirmation">
-                  <input id="flash-confirmation" type="checkbox" />
-                  <span>我已备份重要数据，并确认写入期间不会断开 USB 连接。</span>
-                </label>
-                <p id="flash-live-status" class="flash-live-status" role="status" aria-live="polite">完成确认后即可选择设备。</p>
-                <div class="flash-panel-actions">
-                  <button class="button button-quiet" type="button" data-flow-back="erase">返回</button>
-                  <button id="flash-button" class="button button-disabled" type="button" disabled>选择设备并开始</button>
-                </div>
+                <label class="confirmation"><input id="flash-confirmation" type="checkbox" /><span>我已确认设备型号，并了解刷写过程中不能断开 USB 连接。</span></label>
+                <p id="flash-live-status" class="flash-live-status" role="status" aria-live="polite">准备就绪后，在系统窗口中选择设备串口。</p>
+                <div class="flash-panel-actions"><button class="text-button" type="button" data-flow-back="erase">← 返回</button><button id="flash-button" class="button button-disabled" type="button" disabled>确认后开始</button></div>
               </section>
-
             </div>
           </div>
-          <ol class="flash-progress" aria-label="刷写执行进度">
-            <li data-flash-progress="connect"><span>01</span>连接设备</li><li data-flash-progress="check"><span>02</span>校验环境</li><li data-flash-progress="write"><span>03</span>写入固件</li><li data-flash-progress="verify"><span>04</span>校验数据</li><li data-flash-progress="done"><span>05</span>完成</li>
+          <ol class="flash-progress" aria-label="刷写进度">
+            <li data-flash-progress="connect"><span>01</span>连接设备</li>
+            <li data-flash-progress="check"><span>02</span>校验环境</li>
+            <li data-flash-progress="write"><span>03</span>写入固件</li>
+            <li data-flash-progress="verify"><span>04</span>校验数据</li>
+            <li data-flash-progress="done"><span>05</span>完成</li>
           </ol>
         </div>
       </section>
 
-      <section id="manual" class="support section-shell ink-section" aria-labelledby="support-title">
-        <div class="support-heading reveal">
-          <h2 id="support-title">先确认数据安全，<br><em>再处理问题。</em></h2>
-        </div>
-        <div class="faq-list">
-          <details class="reveal"><summary><span>网页刷机支持哪些浏览器？</span><span aria-hidden="true">＋</span></summary><p>支持具备 Web Serial 能力的桌面版 Chrome 与 Edge。Safari、Firefox 与移动浏览器暂不支持，可改用命令行方案。</p></details>
-          <details class="reveal"><summary><span>刷写会清空 TF 卡里的书吗？</span><span aria-hidden="true">＋</span></summary><p>不会。刷写发生在设备内部闪存，不会改写 TF 卡。操作前仍建议安全弹出并暂时取出 TF 卡。</p></details>
-          <details class="reveal"><summary><span>设备没有 BOOT 或 RESET 按键怎么办？</span><span aria-hidden="true">＋</span></summary><p>小纸 Pico 使用 USB Serial/JTAG 自动复位进入下载模式。请使用可靠的数据线并关闭占用串口的软件。</p></details>
-          <details class="reveal"><summary><span>页面停在旧画面，是不是刷写成功了？</span><span aria-hidden="true">＋</span></summary><p>不一定。电子墨水屏断电后仍会保留画面。正式刷机流程会校验写入，并提示重新启动后的验证步骤。</p></details>
-          <details class="reveal"><summary><span>命令行备用方案需要什么？</span><span aria-hidden="true">＋</span></summary><p>需要桌面 Python、esptool 与 pyserial。正式固件发布时将同时提供完整四分区参数和可复制的命令。</p></details>
+      <section class="guide-section section-shell" id="guide" aria-labelledby="guide-title">
+        <header class="section-heading reveal">
+          <p class="section-index">04 / 使用说明</p>
+          <h2 id="guide-title">从一本书开始。</h2>
+          <p>完成刷写后，把书放进设备，然后让连接退场。</p>
+        </header>
+        <div class="guide-columns">
+          <article class="guide-block reveal">
+            <p class="micro-label">QUICK START / 初次使用</p>
+            <ol>
+              <li><span>01</span><div><h3>准备存储卡</h3><p>将 TF 卡格式化为 FAT32，并插入设备。</p></div></li>
+              <li><span>02</span><div><h3>写入固件</h3><p>使用上方网页刷机工具连接设备，按引导完成写入。</p></div></li>
+              <li><span>03</span><div><h3>放入书籍</h3><p>将 TXT 或 EPUB 文件复制到书库目录，重新扫描即可阅读。</p></div></li>
+            </ol>
+          </article>
+          <article class="guide-block reveal">
+            <p class="micro-label">WI-FI TRANSFER / Wi-Fi 传书</p>
+            <ol>
+              <li><span>01</span><div><h3>开启传书</h3><p>在 AuraReader 设置中进入 Wi-Fi 传书。</p></div></li>
+              <li><span>02</span><div><h3>访问地址</h3><p>让手机或电脑连接同一网络，在浏览器中打开设备显示的地址。</p></div></li>
+              <li><span>03</span><div><h3>上传并返回</h3><p>上传书籍后退出传书模式，设备会更新本地书库。</p></div></li>
+            </ol>
+          </article>
         </div>
       </section>
 
+      <section class="changelog-section section-shell" id="changelog" aria-labelledby="changelog-title">
+        <header class="section-heading reveal">
+          <p class="section-index">05 / CHANGELOG</p>
+          <h2 id="changelog-title">固件更新日志。</h2>
+          <p>每一个公开版本都在这里留下清晰记录。</p>
+        </header>
+        <article class="release-entry reveal">
+          <div class="release-meta"><p>STABLE RELEASE</p><h3>v0.1.0</h3><time datetime="2026-10-15">2026.10.15</time></div>
+          <div><h4>首个公开版本</h4><ul><li>本地 TXT 与 EPUB 阅读</li><li>阅读排版、进度与时长记录</li><li>TF 卡书库与 Wi-Fi 传书</li><li>网页完整固件刷写</li></ul></div>
+        </article>
+      </section>
+
+      <section class="faq-section" id="faq" aria-labelledby="faq-title">
+        <div class="section-shell">
+          <header class="section-heading section-heading-light reveal">
+            <p class="section-index">06 / FAQ</p>
+            <h2 id="faq-title">先确认数据安全，<br /><span>再处理问题。</span></h2>
+          </header>
+          <div class="faq-list reveal">
+            <details><summary><span>01</span>网页刷机支持哪些浏览器？</summary><p>请使用桌面版 Chrome 或 Edge。网页刷机依赖 Web Serial，Safari、Firefox 与移动浏览器暂不支持。</p></details>
+            <details><summary><span>02</span>刷写会清空 TF 卡里的书吗？</summary><p>标准写入不会处理 TF 卡。完整擦除针对设备闪存，但操作前仍建议备份重要书籍与数据。</p></details>
+            <details><summary><span>03</span>设备没有 BOOT 或 RESET 按键怎么办？</summary><p>先直接连接并尝试刷写。若无法进入下载模式，请参考开发板说明，通过对应焊盘或按键组合进入。</p></details>
+            <details><summary><span>04</span>页面停在旧画面，是不是刷写失败了？</summary><p>电子纸可能保留上一次画面。以网页进度与设备重新启动为准，必要时断电重启一次。</p></details>
+            <details><summary><span>05</span>命令行备用方案需要什么？</summary><p>需要 Python、esptool 与完整固件文件。普通用户优先使用网页刷机，避免手动填写错误的分区地址。</p></details>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
-      <a class="wordmark" href="#top">AURA READER</a>
-      <p>随身极简阅读固件</p>
-      <p class="footer-credit">Designed by Malus/百变逗比i</p>
-      <p class="footer-meta">© <span data-year></span> · 回归阅读本质</p>
+      <a class="brand" href="#top">AURA READER <span aria-hidden="true">/ 余白</span></a>
+      <p>随身极简阅读固件<br />回归阅读本质</p>
+      <p>Designed by Malus/百变逗比i</p>
+      <p>© <span data-year>2026</span> AuraReader</p>
     </footer>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
-

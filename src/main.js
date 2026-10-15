@@ -1,4 +1,4 @@
-import { getReleaseStatus } from "./release-service.js";
+import { getReleaseCatalog } from "./release-service.js";
 import { setupWebFlasher } from "./web-flasher.js";
 
 document.documentElement.classList.add("js");
@@ -98,19 +98,20 @@ function setupFaq() {
   });
 }
 
-async function setReleaseStatus(onReady) {
+async function loadReleaseCatalog(onReleases) {
   const status = query("#release-status");
   if (!status) return;
 
   try {
-    const release = await getReleaseStatus();
-    const ready = release.state === "available";
+    const releases = await getReleaseCatalog();
+    const [release] = releases;
+    const ready = Boolean(release);
     status.textContent = ready ? `固件 ${release.version} 已就绪` : "固件暂未发布";
     status.closest(".flash-status-line")?.toggleAttribute("data-ready", ready);
-    onReady(ready);
+    onReleases(releases);
   } catch {
     status.textContent = "暂时无法读取固件状态";
-    onReady(false);
+    onReleases([]);
   }
 }
 
@@ -121,4 +122,4 @@ setupActiveNavigation();
 setupReveals();
 setupFaq();
 const flasher = setupWebFlasher();
-void setReleaseStatus(flasher.setReleaseReady);
+void loadReleaseCatalog(flasher.setReleases);
