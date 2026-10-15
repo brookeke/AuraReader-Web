@@ -13,6 +13,8 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
 
   assert.equal(manifest.name, "AuraReader");
   assert.equal(manifest.version, "0.1.0");
+  assert.equal(manifest.state, "suspended");
+  assert.equal(manifest.installable, false);
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
     { path: "v0.1.0/aurareader-v0.1.0.bin", offset: 0 },
@@ -21,6 +23,33 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
   const imageUrl = new URL(`firmware/${build.parts[0].path}`, projectRoot);
   await access(imageUrl);
   assert.ok((await stat(imageUrl)).size > 0x910000, "merged image must include the font partition");
+});
+
+test("the suspended v0.1.0 release cannot enter the flashing flow", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
+  const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
+  const { parseReleaseAvailability } = await import(
+    new URL("src/release-service.js", projectRoot)
+  );
+
+  const availability = parseReleaseAvailability({
+    name: "AuraReader",
+    version: "0.1.0",
+    state: "suspended",
+    installable: false,
+    builds: [],
+  });
+
+  assert.deepEqual(availability, {
+    state: "suspended",
+    version: "0.1.0",
+    releases: [],
+  });
+  assert.match(html, /id="release-status">固件 v0\.1\.0 烧录已暂停/);
+  assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>烧录已暂停/s);
+  assert.match(main, /availability\.state === "suspended"/);
+  assert.match(flasher, /destination === "erase" && !releaseReady/);
 });
 
 test("the merged image matches the verified release artifact", async () => {
@@ -39,9 +68,9 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
   assert.doesNotMatch(html, /esp-web-install-button|esp-web-tools@/);
-  assert.match(html, /id="flash-version-title"[^>]*>选择安装版本<\/h4>/);
-  assert.match(html, /name="firmware-version"[^>]+value="0\.1\.0"[^>]+checked/s);
-  assert.match(html, /data-firmware-version="0\.1\.0"/);
+  assert.match(html, /id="flash-version-title"[^>]*>烧录暂时关闭<\/h4>/);
+  assert.doesNotMatch(html, /name="firmware-version"[^>]+value="0\.1\.0"/s);
+  assert.match(html, /class="release-unavailable"/);
   assert.doesNotMatch(html, /flash-mode|data-flash-panel="console"|串口日志/);
   assert.doesNotMatch(flasher, /consoleButton|disconnectConsole|serialReader/);
   assert.match(html, /name="erase-mode"[^>]+value="standard"[^>]+checked/s);

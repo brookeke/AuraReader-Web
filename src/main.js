@@ -1,4 +1,4 @@
-import { getReleaseCatalog } from "./release-service.js";
+import { getReleaseAvailability } from "./release-service.js";
 import { getHeaderVisibility } from "./header-visibility.js";
 import { setupWebFlasher } from "./web-flasher.js";
 
@@ -151,12 +151,18 @@ async function loadReleaseCatalog(onReleases) {
   if (!status) return;
 
   try {
-    const releases = await getReleaseCatalog();
-    const [release] = releases;
-    const ready = Boolean(release);
-    status.textContent = ready ? `固件 ${release.version} 已就绪` : "固件暂未发布";
+    const availability = await getReleaseAvailability();
+    const ready = availability.state === "available";
+    if (availability.state === "suspended") {
+      status.textContent = availability.version
+        ? `固件 v${availability.version} 烧录已暂停`
+        : "固件烧录已暂停";
+    } else {
+      const [release] = availability.releases;
+      status.textContent = ready ? `固件 ${release.version} 已就绪` : "固件暂未发布";
+    }
     status.closest(".flash-status-line")?.toggleAttribute("data-ready", ready);
-    onReleases(releases);
+    onReleases(availability.releases);
   } catch {
     status.textContent = "暂时无法读取固件状态";
     onReleases([]);

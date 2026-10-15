@@ -114,12 +114,12 @@ test("release catalog normalization keeps only valid installable entries", async
   const releases = parseReleaseCatalog({
     releases: [
       { version: "0.3.0", channel: "stable", path: "./firmware/v0.3.0/full.bin" },
-      { version: "0.2.0", channel: "beta", path: "./firmware/v0.2.0/full.bin" },
+      { version: "0.2.0", channel: "beta", path: "./firmware/v0.2.0/full.bin", installable: false },
       { version: "0.1.0", channel: "stable", path: "./firmware/v0.1.0/full.bin" },
     ],
   });
 
   assert.equal(releases.length, 2);
-  assert.deepEqual(releases.map(({ version }) => version), ["0.3.0", "0.2.0"]);
+  assert.deepEqual(releases.map(({ version }) => version), ["0.3.0", "0.1.0"]);
   assert.equal(releases[0].path, "./firmware/v0.3.0/full.bin");
 });

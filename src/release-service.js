@@ -3,7 +3,13 @@ const apiBaseUrl = environment.VITE_API_BASE_URL?.trim();
 const manifestUrl = environment.VITE_RELEASE_MANIFEST_URL?.trim() || "./firmware/manifest.json";
 
 function normalizeRelease(value) {
-  if (!value || typeof value !== "object" || typeof value.version !== "string" || !value.version) {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    value.installable === false ||
+    typeof value.version !== "string" ||
+    !value.version
+  ) {
     return null;
   }
 
@@ -29,16 +35,27 @@ function normalizeRelease(value) {
 }
 
 export function parseReleaseCatalog(value) {
+  return parseReleaseAvailability(value).releases;
+}
+
+export function parseReleaseAvailability(value) {
   if (!value || typeof value !== "object") throw new Error("Release catalog response is invalid");
-  if (value.state === "pending") return [];
+  if (value.state === "pending") return { state: "pending", version: null, releases: [] };
+  if (value.state === "suspended" || value.installable === false) {
+    return {
+      state: "suspended",
+      version: typeof value.version === "string" ? value.version : null,
+      releases: [],
+    };
+  }
 
   const candidates = Array.isArray(value.releases) ? value.releases : [value];
   const releases = candidates.map(normalizeRelease).filter(Boolean).slice(0, 2);
   if (releases.length === 0) throw new Error("Release catalog response is invalid");
-  return releases;
+  return { state: "available", version: releases[0].version, releases };
 }
 
-export async function getReleaseCatalog() {
+async function requestReleaseAvailability() {
   const endpoint = apiBaseUrl
     ? `${apiBaseUrl.replace(/\/$/, "")}/v1/releases/latest`
     : manifestUrl;
@@ -48,12 +65,22 @@ export async function getReleaseCatalog() {
     headers: { Accept: "application/json" },
   });
   if (!response.ok) throw new Error(`Release catalog request failed: ${response.status}`);
-  return parseReleaseCatalog(await response.json());
+  return parseReleaseAvailability(await response.json());
+}
+
+export async function getReleaseAvailability() {
+  return requestReleaseAvailability();
+}
+
+export async function getReleaseCatalog() {
+  return (await requestReleaseAvailability()).releases;
 }
 
 export async function getReleaseStatus() {
-  const releases = await getReleaseCatalog();
-  if (releases.length === 0) return { state: "pending" };
-  const [release] = releases;
+  const availability = await requestReleaseAvailability();
+  if (availability.state !== "available") {
+    return { state: availability.state, version: availability.version };
+  }
+  const [release] = availability.releases;
   return { state: "available", version: release.version, publishedAt: release.publishedAt };
 }

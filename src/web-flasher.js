@@ -23,6 +23,7 @@ export function setupWebFlasher() {
   const markers = [...root.querySelectorAll("[data-flow-marker]")];
   const eraseInputs = [...root.querySelectorAll("[name='erase-mode']")];
   const versionOptions = root.querySelector("[data-version-options]");
+  const versionNextButton = root.querySelector('[data-flow-next="erase"]');
   const versionSummary = root.querySelector("[data-version-summary]");
   const confirmation = root.querySelector("#flash-confirmation");
   const flashButton = root.querySelector("#flash-button");
@@ -83,8 +84,14 @@ export function setupWebFlasher() {
     if (releases.length === 0) {
       const unavailable = document.createElement("p");
       unavailable.className = "release-unavailable";
-      unavailable.textContent = "当前没有可安装的固件版本。";
+      unavailable.textContent = "v0.1.0 正在修复，当前暂停网页烧录。";
       versionOptions.append(unavailable);
+    }
+    if (versionNextButton) {
+      versionNextButton.disabled = releases.length === 0;
+      versionNextButton.classList.toggle("button-disabled", releases.length === 0);
+      versionNextButton.classList.toggle("button-dark", releases.length > 0);
+      versionNextButton.textContent = releases.length > 0 ? "下一步 →" : "烧录已暂停";
     }
     selectRelease(selectedRelease?.version);
   }
@@ -150,6 +157,7 @@ export function setupWebFlasher() {
   root.querySelectorAll("[data-flow-next]").forEach((button) => {
     button.addEventListener("click", () => {
       const destination = button.dataset.flowNext;
+      if (destination === "erase" && !releaseReady) return;
       showPanel(destination || "erase");
     });
   });

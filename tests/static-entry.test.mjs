@@ -34,13 +34,14 @@ test("the footer does not position AuraReader as made only for Xiao Zhi Pico", a
   assert.doesNotMatch(html, /为小纸\s*Pico\s*而作/i);
 });
 
-test("the published release replaces the development placeholder copy", async () => {
+test("the suspended release is presented as unavailable instead of ready", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /AuraReader v0\.1\.0/);
+  assert.match(html, /v0\.1\.0/);
   assert.doesNotMatch(html, /固件加紧开发中/);
-  assert.match(main, /固件 \$\{release\.version\} 已就绪/);
+  assert.match(html, /v0\.1\.0 正在修复，当前暂停网页烧录/);
+  assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
 test("the interface gallery becomes one readable column at the tablet breakpoint", async () => {
