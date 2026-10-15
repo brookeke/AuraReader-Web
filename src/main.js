@@ -108,6 +108,14 @@ function setupActiveNavigation() {
 
 function setupReveals() {
   const items = queryAll(".reveal");
+  queryAll("[data-reveal-group]").forEach((group) => {
+    [...group.children]
+      .filter((item) => item.classList.contains("reveal"))
+      .forEach((item, index) => {
+        item.style.setProperty("--reveal-delay", `${Math.min(index, 5) * 45}ms`);
+      });
+  });
+
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
     items.forEach((item) => item.setAttribute("data-visible", ""));
     return;

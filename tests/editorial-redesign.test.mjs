@@ -69,6 +69,30 @@ test("the header stays available near the top and while navigation is in use", a
   );
 });
 
+test("editorial motion reveals copy, image masks and grouped items with one rhythm", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+  const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
+
+  assert.match(html, /class="hero-copy reveal reveal-sequence"/);
+  assert.match(html, /class="hero-visual reveal reveal-clip"/);
+  assert.match(html, /class="advantage-list" data-reveal-group/);
+  assert.match(html, /class="screen-gallery" data-reveal-group/);
+  assert.match(css, /--motion-reveal:\s*680ms;/);
+  assert.match(css, /\.js \.reveal-clip \.screen-frame\s*\{[^}]*clip-path:\s*inset\(0 0 100%\);/s);
+  assert.match(css, /\.js \.screen-card\.reveal-clip\[data-visible\] \.screen-frame:hover img\s*\{[^}]*transform:\s*scale\(1\.018\);/s);
+  assert.match(main, /setProperty\("--reveal-delay",\s*`\$\{Math\.min\(index, 5\) \* 45\}ms`\)/);
+});
+
+test("editorial motion resolves immediately when reduced motion is requested", async () => {
+  const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+  const reducedMotion = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+
+  assert.match(reducedMotion, /\.js \.reveal-sequence > \*/);
+  assert.match(reducedMotion, /\.js \.reveal-clip \.screen-frame/);
+  assert.match(reducedMotion, /clip-path:\s*none/);
+});
+
 test("the release catalog supports at most two installable versions", async () => {
   const service = await readFile(new URL("src/release-service.js", projectRoot), "utf8");
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");

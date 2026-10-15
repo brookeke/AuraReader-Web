@@ -27,7 +27,7 @@
 
     <main id="main-content">
       <section class="hero section-shell" id="top" aria-labelledby="hero-title">
-        <div class="hero-copy reveal">
+        <div class="hero-copy reveal reveal-sequence">
           <p class="eyebrow">AURAREADER / ESP32-S3 READING FIRMWARE</p>
           <h1 id="hero-title">回归阅读本质。</h1>
           <p class="hero-lead">为专注阅读而设计的随身固件。没有信息流，没有多余提醒，让文字重新成为设备的中心。</p>
@@ -36,7 +36,7 @@
             <a class="text-link" href="#introduction">了解 AuraReader <span aria-hidden="true">→</span></a>
           </div>
         </div>
-        <figure class="hero-visual reveal">
+        <figure class="hero-visual reveal reveal-clip">
           <div class="screen-frame screen-frame-hero">
             <img src="./screens/home.svg" alt="AuraReader 主界面，展示最近阅读的三本书" width="800" height="1280" />
           </div>
@@ -60,7 +60,7 @@
           <p>“随身极简阅读，<br />回归阅读本质。”</p>
           <footer>— AURAREADER DESIGN PRINCIPLE</footer>
         </blockquote>
-        <div class="advantage-list">
+        <div class="advantage-list" data-reveal-group>
           <article class="advantage reveal"><span>01</span><h3>专注阅读</h3><p>克制的界面与清晰的信息层级，让每次打开设备都直接回到文字。</p></article>
           <article class="advantage reveal"><span>02</span><h3>舒适排版</h3><p>字体、字号与行距可调，把有限屏幕整理成更自然的阅读节奏。</p></article>
           <article class="advantage reveal"><span>03</span><h3>本地书库</h3><p>书籍存放在 TF 卡中，不依赖账户、订阅或持续在线服务。</p></article>
@@ -76,16 +76,16 @@
             <h2 id="interface-title">让页面，<br /><span>只留下文字。</span></h2>
             <p>以下画面均来自 AuraReader 的真实界面设计，不是概念渲染。</p>
           </header>
-          <div class="screen-gallery">
-            <figure class="screen-card reveal">
+          <div class="screen-gallery" data-reveal-group>
+            <figure class="screen-card reveal reveal-clip">
               <div class="screen-frame"><img src="./screens/reader.svg" alt="AuraReader 沉浸式正文阅读界面" width="800" height="1280" /></div>
               <figcaption><span>阅读</span><span>沉浸式正文</span></figcaption>
             </figure>
-            <figure class="screen-card screen-card-offset reveal">
+            <figure class="screen-card screen-card-offset reveal reveal-clip">
               <div class="screen-frame"><img src="./screens/typography.svg" alt="AuraReader 字体、字号与行距排版设置界面" width="800" height="1280" /></div>
               <figcaption><span>排版</span><span>按阅读习惯设定</span></figcaption>
             </figure>
-            <figure class="screen-card reveal">
+            <figure class="screen-card reveal reveal-clip">
               <div class="screen-frame"><img src="./screens/stats.svg" alt="AuraReader 阅读时间与书目统计界面" width="800" height="1280" /></div>
               <figcaption><span>统计</span><span>时间清晰留存</span></figcaption>
             </figure>
@@ -182,7 +182,7 @@
           <h2 id="guide-title">从一本书开始。</h2>
           <p>完成刷写后，把书放进设备，然后让连接退场。</p>
         </header>
-        <div class="guide-columns">
+        <div class="guide-columns" data-reveal-group>
           <article class="guide-block reveal">
             <p class="micro-label">QUICK START / 初次使用</p>
             <ol>
