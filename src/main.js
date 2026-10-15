@@ -1,4 +1,5 @@
 import { getReleaseCatalog } from "./release-service.js";
+import { getHeaderVisibility } from "./header-visibility.js";
 import { setupWebFlasher } from "./web-flasher.js";
 
 document.documentElement.classList.add("js");
@@ -31,6 +32,45 @@ function setupNavigation() {
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 880) close();
   });
+}
+
+function setupAutoHideHeader() {
+  const header = query("[data-auto-hide-header]");
+  const revealZone = query("[data-header-reveal-zone]");
+  const nav = query("#site-nav");
+  if (!header) return;
+
+  let previousScrollY = Math.max(window.scrollY, 0);
+  let animationFrame = null;
+
+  const show = () => header.removeAttribute("data-hidden");
+  const update = () => {
+    animationFrame = null;
+    const currentScrollY = Math.max(window.scrollY, 0);
+    const visibility = getHeaderVisibility({
+      currentScrollY,
+      previousScrollY,
+      headerHeight: header.offsetHeight,
+      locked: nav?.hasAttribute("data-open") || header.matches(":focus-within"),
+    });
+
+    if (visibility === "hidden") header.setAttribute("data-hidden", "");
+    if (visibility === "visible") show();
+    previousScrollY = currentScrollY;
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (animationFrame !== null) return;
+      animationFrame = requestAnimationFrame(update);
+    },
+    { passive: true },
+  );
+  header.addEventListener("pointerenter", show);
+  header.addEventListener("focusin", show);
+  revealZone?.addEventListener("pointerenter", show);
+  window.addEventListener("hashchange", show);
 }
 
 function setupActiveNavigation() {
@@ -118,6 +158,7 @@ async function loadReleaseCatalog(onReleases) {
 const year = query("[data-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 setupNavigation();
+setupAutoHideHeader();
 setupActiveNavigation();
 setupReveals();
 setupFaq();

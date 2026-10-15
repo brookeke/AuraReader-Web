@@ -50,7 +50,17 @@ img { display: block; max-width: 100%; }
   padding: 0 max(3rem, calc((100vw - 88rem) / 2));
   border-bottom: 1px solid var(--line);
   background: rgba(249, 248, 246, 0.96);
+  transition: transform 220ms ease;
 }
+.site-header[data-hidden] { transform: translateY(-100%); }
+.header-reveal-zone {
+  position: fixed;
+  z-index: 21;
+  inset: 0 0 auto;
+  height: 0.75rem;
+  pointer-events: none;
+}
+.site-header[data-hidden] + .header-reveal-zone { pointer-events: auto; }
 .brand {
   width: max-content;
   color: var(--ink);

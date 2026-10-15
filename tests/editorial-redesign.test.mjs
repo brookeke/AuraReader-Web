@@ -39,6 +39,36 @@ test("the visual system stays flat, square and monochrome", async () => {
   assert.doesNotMatch(css, /border-radius|box-shadow|linear-gradient|radial-gradient/i);
 });
 
+test("the header hides on upward swipes and returns on reverse scrolling", async () => {
+  const { getHeaderVisibility } = await import(new URL("src/header-visibility.js", projectRoot));
+
+  assert.equal(
+    getHeaderVisibility({ currentScrollY: 320, previousScrollY: 200, headerHeight: 88 }),
+    "hidden",
+  );
+  assert.equal(
+    getHeaderVisibility({ currentScrollY: 200, previousScrollY: 320, headerHeight: 88 }),
+    "visible",
+  );
+});
+
+test("the header stays available near the top and while navigation is in use", async () => {
+  const { getHeaderVisibility } = await import(new URL("src/header-visibility.js", projectRoot));
+
+  assert.equal(
+    getHeaderVisibility({ currentScrollY: 60, previousScrollY: 0, headerHeight: 88 }),
+    "visible",
+  );
+  assert.equal(
+    getHeaderVisibility({ currentScrollY: 320, previousScrollY: 200, headerHeight: 88, locked: true }),
+    "visible",
+  );
+  assert.equal(
+    getHeaderVisibility({ currentScrollY: 204, previousScrollY: 200, headerHeight: 88 }),
+    "unchanged",
+  );
+});
+
 test("the release catalog supports at most two installable versions", async () => {
   const service = await readFile(new URL("src/release-service.js", projectRoot), "utf8");
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
