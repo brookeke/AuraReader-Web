@@ -113,13 +113,21 @@ test("release catalog normalization keeps only valid installable entries", async
   const { parseReleaseCatalog } = await import(new URL("src/release-service.js", projectRoot));
   const releases = parseReleaseCatalog({
     releases: [
-      { version: "0.3.0", channel: "stable", path: "./firmware/v0.3.0/full.bin" },
-      { version: "0.2.0", channel: "beta", path: "./firmware/v0.2.0/full.bin", installable: false },
-      { version: "0.1.0", channel: "stable", path: "./firmware/v0.1.0/full.bin" },
+      { codename: "Spark", version: "0.3.0", channel: "stable", path: "./firmware/v0.3.0/full.bin" },
+      { codename: "firefly", version: "0.2.0", channel: "beta", path: "./firmware/v0.2.0/full.bin", installable: false },
+      { codename: "firefly", version: "0.1.0", channel: "alpha", path: "./firmware/v0.1.0/full.bin" },
     ],
   });
 
   assert.equal(releases.length, 2);
   assert.deepEqual(releases.map(({ version }) => version), ["0.3.0", "0.1.0"]);
+  assert.deepEqual(releases.map(({ codename }) => codename), ["Spark", "firefly"]);
   assert.equal(releases[0].path, "./firmware/v0.3.0/full.bin");
+});
+
+test("the flasher labels releases with codename and version", async () => {
+  const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
+
+  assert.match(flasher, /`\$\{release\.codename\} v\$\{release\.version\}`/);
+  assert.doesNotMatch(flasher, /`AuraReader v\$\{release\.version\}`/);
 });

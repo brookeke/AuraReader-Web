@@ -12,6 +12,7 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
   const build = manifest.builds.find((item) => item.chipFamily === "ESP32-S3");
 
   assert.equal(manifest.name, "AuraReader");
+  assert.equal(manifest.codename, "firefly");
   assert.equal(manifest.version, "0.1.0");
   assert.equal(manifest.state, "suspended");
   assert.equal(manifest.installable, false);
@@ -35,6 +36,7 @@ test("the suspended v0.1.0 release cannot enter the flashing flow", async () => 
 
   const availability = parseReleaseAvailability({
     name: "AuraReader",
+    codename: "firefly",
     version: "0.1.0",
     state: "suspended",
     installable: false,
@@ -43,10 +45,13 @@ test("the suspended v0.1.0 release cannot enter the flashing flow", async () => 
 
   assert.deepEqual(availability, {
     state: "suspended",
+    codename: "firefly",
     version: "0.1.0",
     releases: [],
   });
   assert.match(html, /id="release-status">固件 v0\.1\.0 烧录已暂停/);
+  assert.match(html, /id="flash-release-codename">firefly<\/span><br \/><span id="flash-release-version">v0\.1\.0<\/span>/);
+  assert.match(main, /availability\.codename/);
   assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>烧录已暂停/s);
   assert.match(main, /availability\.state === "suspended"/);
   assert.match(flasher, /destination === "erase" && !releaseReady/);

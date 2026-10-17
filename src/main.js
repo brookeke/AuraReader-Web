@@ -148,11 +148,19 @@ function setupFaq() {
 
 async function loadReleaseCatalog(onReleases) {
   const status = query("#release-status");
+  const releaseCodename = query("#flash-release-codename");
+  const releaseVersion = query("#flash-release-version");
   if (!status) return;
 
   try {
     const availability = await getReleaseAvailability();
     const ready = availability.state === "available";
+    if (availability.codename && releaseCodename) {
+      releaseCodename.textContent = availability.codename;
+    }
+    if (availability.version && releaseVersion) {
+      releaseVersion.textContent = `v${availability.version}`;
+    }
     if (availability.state === "suspended") {
       status.textContent = availability.version
         ? `固件 v${availability.version} 烧录已暂停`

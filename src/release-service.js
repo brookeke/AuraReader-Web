@@ -7,6 +7,8 @@ function normalizeRelease(value) {
     !value ||
     typeof value !== "object" ||
     value.installable === false ||
+    typeof value.codename !== "string" ||
+    !value.codename.trim() ||
     typeof value.version !== "string" ||
     !value.version
   ) {
@@ -23,6 +25,7 @@ function normalizeRelease(value) {
   if (!path) return null;
 
   return {
+    codename: value.codename.trim(),
     version: value.version,
     publishedAt:
       typeof value.publishedAt === "string" && !Number.isNaN(Date.parse(value.publishedAt))
@@ -40,10 +43,13 @@ export function parseReleaseCatalog(value) {
 
 export function parseReleaseAvailability(value) {
   if (!value || typeof value !== "object") throw new Error("Release catalog response is invalid");
-  if (value.state === "pending") return { state: "pending", version: null, releases: [] };
+  if (value.state === "pending") {
+    return { state: "pending", codename: null, version: null, releases: [] };
+  }
   if (value.state === "suspended" || value.installable === false) {
     return {
       state: "suspended",
+      codename: typeof value.codename === "string" && value.codename.trim() ? value.codename.trim() : null,
       version: typeof value.version === "string" ? value.version : null,
       releases: [],
     };
@@ -52,7 +58,12 @@ export function parseReleaseAvailability(value) {
   const candidates = Array.isArray(value.releases) ? value.releases : [value];
   const releases = candidates.map(normalizeRelease).filter(Boolean).slice(0, 2);
   if (releases.length === 0) throw new Error("Release catalog response is invalid");
-  return { state: "available", version: releases[0].version, releases };
+  return {
+    state: "available",
+    codename: releases[0].codename,
+    version: releases[0].version,
+    releases,
+  };
 }
 
 async function requestReleaseAvailability() {

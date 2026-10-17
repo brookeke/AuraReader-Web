@@ -46,7 +46,11 @@ export function setupWebFlasher() {
 
   function selectRelease(version) {
     selectedRelease = releases.find((release) => release.version === version) ?? releases[0] ?? null;
-    if (versionSummary) versionSummary.textContent = selectedRelease ? `v${selectedRelease.version}` : "—";
+    if (versionSummary) {
+      versionSummary.textContent = selectedRelease
+        ? `${selectedRelease.codename} v${selectedRelease.version}`
+        : "—";
+    }
   }
 
   function renderReleaseOptions(nextReleases) {
@@ -69,7 +73,7 @@ export function setupWebFlasher() {
       const copy = document.createElement("span");
       copy.className = "option-copy";
       const title = document.createElement("strong");
-      title.textContent = `AuraReader v${release.version}`;
+      title.textContent = `${release.codename} v${release.version}`;
       const description = document.createElement("small");
       description.textContent = `${release.channel === "stable" ? "稳定版" : release.channel} · 完整固件`;
       copy.append(title, description);
