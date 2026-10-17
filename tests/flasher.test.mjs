@@ -28,6 +28,7 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
 
 test("the suspended v0.1.0 release cannot enter the flashing flow", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const styles = await readFile(new URL("src/styles.css", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
   const { parseReleaseAvailability } = await import(
@@ -50,7 +51,9 @@ test("the suspended v0.1.0 release cannot enter the flashing flow", async () => 
     releases: [],
   });
   assert.match(html, /id="release-status">固件 v0\.1\.0 烧录已暂停/);
-  assert.match(html, /id="flash-release-codename">firefly<\/span><br \/><span id="flash-release-version">v0\.1\.0<\/span>/);
+  assert.match(html, /class="flash-product-name">AuraReader<\/span>/);
+  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.1\.0<\/span>/s);
+  assert.match(styles, /\.flash-release-identity\s*\{[^}]*font-size:\s*clamp\(1\.35rem,\s*2vw,\s*2rem\)/s);
   assert.match(main, /availability\.codename/);
   assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>烧录已暂停/s);
   assert.match(main, /availability\.state === "suspended"/);

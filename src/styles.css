@@ -204,6 +204,16 @@ main { padding-top: 5.5rem; }
 .flash-workbench-grid { display: grid; grid-template-columns: minmax(18rem, 0.95fr) minmax(30rem, 1.2fr); }
 .flash-intro { padding: clamp(2.5rem, 6vw, 6rem); border-right: 1px solid var(--line); }
 .flash-intro h3 { margin-top: 3rem; font-size: clamp(3.6rem, 6vw, 7rem); letter-spacing: -0.06em; }
+.flash-product-name { display: block; }
+.flash-release-identity {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  margin-top: 0.75rem;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  letter-spacing: 0;
+  line-height: 1.2;
+}
 .flash-intro > p:not(.micro-label) { max-width: 30rem; margin: 3rem 0; color: var(--ink-60); }
 .flash-flow { min-width: 0; min-height: 44rem; height: 44rem; display: grid; grid-template-rows: auto 1fr; padding: clamp(2rem, 5vw, 5rem); }
 .flash-flow-markers { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 4rem; padding: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); list-style: none; }
