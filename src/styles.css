@@ -264,6 +264,7 @@ main { padding-top: 5.5rem; }
 .guide-block li p { margin: 0.6rem 0 0; color: var(--ink-60); }
 
 .changelog-section { border-top: 1px solid var(--line); }
+.release-list > .release-entry:nth-child(n + 3) { display: none; }
 .release-entry { display: grid; grid-template-columns: 0.6fr 1fr; gap: 8vw; margin-top: 7rem; padding-block: 2rem; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
 .release-meta p, .release-meta time { color: var(--ink-60); font-size: 0.7rem; letter-spacing: 0.12em; }
 .release-meta h3 { margin: 1rem 0; font-size: 4.5rem; }

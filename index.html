@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f9f8f6" />
     <meta name="description" content="AuraReader 是面向 ESP32-S3 阅读设备的随身极简阅读固件。了解设计、使用方法，并在浏览器中安全刷写固件。" />
     <title>AuraReader / 余白 — 回归阅读本质</title>
-    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/styles.css?v=2.5.1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -217,14 +217,16 @@
           <h2 id="changelog-title">固件更新日志。</h2>
           <p>每一个公开版本都在这里留下清晰记录。</p>
         </header>
-        <article class="release-entry reveal">
-          <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.0-firefly.alpha.26</h3><time datetime="2026-10-18">2026.10.18</time></div>
-          <div><h4>性能分析与计时优化</h4><ul><li>优化翻页性能分析，细分绘制锁、字体读取、字形光栅与页面绘制耗时</li><li>优化 EPUB 后台缓存耗时定位，提高翻页停顿问题的排查精度</li><li>优化字体性能计时口径，避免 SD 读取时间重复统计</li></ul></div>
-        </article>
-        <article class="release-entry reveal">
-          <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.0-firefly.alpha.24</h3><time datetime="2026-10-18">2026.10.18</time></div>
-          <div><h4>阅读体验与响应优化</h4><ul><li>优化首页与书架返回速度，减少重复扫描与解析</li><li>优化书架加载进度，内容就绪后再开放操作</li><li>优化字体字重处理，保持预览与正文一致</li><li>优化阅读状态栏对齐与子页面返回提示</li><li>优化 TF 卡目录结构与旧目录迁移</li></ul></div>
-        </article>
+        <div class="release-list" data-visible-limit="2">
+          <article class="release-entry reveal">
+            <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.0-firefly.alpha.26</h3><time datetime="2026-10-18">2026.10.18</time></div>
+            <div><h4>性能分析与计时优化</h4><ul><li>优化翻页性能分析，细分绘制锁、字体读取、字形光栅与页面绘制耗时</li><li>优化 EPUB 后台缓存耗时定位，提高翻页停顿问题的排查精度</li><li>优化字体性能计时口径，避免 SD 读取时间重复统计</li></ul></div>
+          </article>
+          <article class="release-entry reveal">
+            <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.0-firefly.alpha.24</h3><time datetime="2026-10-18">2026.10.18</time></div>
+            <div><h4>阅读体验与响应优化</h4><ul><li>优化首页与书架返回速度，减少重复扫描与解析</li><li>优化书架加载进度，内容就绪后再开放操作</li><li>优化字体字重处理，保持预览与正文一致</li><li>优化阅读状态栏对齐与子页面返回提示</li><li>优化 TF 卡目录结构与旧目录迁移</li></ul></div>
+          </article>
+        </div>
       </section>
 
       <section class="faq-section" id="faq" aria-labelledby="faq-title">
@@ -250,6 +252,6 @@
       <p>Designed by Malus/百变逗比i</p>
       <p>© <span data-year>2026</span> AuraReader</p>
     </footer>
-    <script type="module" src="./src/main.js?v=2.5.0"></script>
+    <script type="module" src="./src/main.js?v=2.5.1"></script>
   </body>
 </html>

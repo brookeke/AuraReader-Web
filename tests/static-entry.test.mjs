@@ -8,17 +8,17 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.5\.0"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.5\.1" \/>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.5\.1"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
 test("branch-hosted source modules are cache-busted together", async () => {
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(main, /"\.\/release-service\.js\?v=2\.5\.0"/);
-  assert.match(main, /"\.\/header-visibility\.js\?v=2\.5\.0"/);
-  assert.match(main, /"\.\/web-flasher\.js\?v=2\.5\.0"/);
+  assert.match(main, /"\.\/release-service\.js\?v=2\.5\.1"/);
+  assert.match(main, /"\.\/header-visibility\.js\?v=2\.5\.1"/);
+  assert.match(main, /"\.\/web-flasher\.js\?v=2\.5\.1"/);
 });
 
 test("image paths also resolve when GitHub Pages serves the repository root", async () => {
@@ -62,6 +62,16 @@ test("the current public changelog records only alpha.26 optimization work", asy
   assert.match(html, /优化 EPUB 后台缓存耗时定位/);
   assert.match(html, /优化字体性能计时口径/);
   assert.doesNotMatch(html, /临时性能诊断|缓存诊断|诊断固件/);
+});
+
+test("the changelog displays at most the latest two releases", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+  const releaseEntries = [...html.matchAll(/<article class="release-entry reveal">/g)];
+
+  assert.equal(releaseEntries.length, 2);
+  assert.match(html, /<div class="release-list" data-visible-limit="2">/);
+  assert.match(css, /\.release-list\s*>\s*\.release-entry:nth-child\(n\s*\+\s*3\)\s*\{[^}]*display:\s*none;/s);
 });
 
 test("the interface gallery becomes one readable column at the tablet breakpoint", async () => {
