@@ -40,7 +40,7 @@ test("the verified alpha release is presented as ready", async () => {
 
   assert.match(html, /v0\.5\.0/);
   assert.doesNotMatch(html, /固件加紧开发中/);
-  assert.match(html, /alpha\.17 已通过构建与完整镜像校验/);
+  assert.match(html, /alpha\.24 已通过构建与完整镜像校验/);
   assert.doesNotMatch(html, /当前暂停网页烧录/);
   assert.match(main, /固件 \$\{release\.label\} 已就绪/);
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
