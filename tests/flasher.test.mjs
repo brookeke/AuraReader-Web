@@ -194,14 +194,16 @@ test("the first step must select a serial device before firmware choices can adv
 test("the guided steps keep a stable work area and aligned actions", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const css = await readFile(new URL("src/styles.css", projectRoot), "utf8");
+  const mobileCss = css.slice(css.indexOf("@media (max-width: 620px)"));
 
   assert.match(html, /data-flow-marker="version"[^>]*><span>01<\/span>开始安装<\/li>/);
   assert.doesNotMatch(html, /class="safety-note/);
   assert.doesNotMatch(html, /重要提示/);
   assert.match(css, /\.flash-workbench\s*\{[^}]*grid-column:\s*1\s*\/\s*-1;/s);
-  assert.match(css, /\.flash-flow\s*\{[^}]*min-height:\s*44rem;[^}]*display:\s*grid;/s);
+  assert.match(css, /\.flash-flow\s*\{[^}]*min-height:\s*52rem;[^}]*height:\s*52rem;[^}]*display:\s*grid;/s);
   assert.match(css, /\.flash-panel:not\(\[hidden\]\)\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;/s);
   assert.match(css, /\.flash-panel-actions\s*\{[^}]*margin-top:\s*auto;/s);
+  assert.match(mobileCss, /\.flash-flow\s*\{[^}]*min-height:\s*60rem;[^}]*height:\s*60rem;/s);
 });
 
 test("production builds copy the firmware tree into dist", async () => {

@@ -215,7 +215,7 @@ main { padding-top: 5.5rem; }
   line-height: 1.2;
 }
 .flash-intro > p:not(.micro-label) { max-width: 30rem; margin: 3rem 0; color: var(--ink-60); }
-.flash-flow { min-width: 0; min-height: 44rem; height: 44rem; display: grid; grid-template-rows: auto 1fr; padding: clamp(2rem, 5vw, 5rem); }
+.flash-flow { min-width: 0; min-height: 52rem; height: 52rem; display: grid; grid-template-rows: auto 1fr; padding: clamp(2rem, 5vw, 5rem); }
 .flash-flow-markers { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 4rem; padding: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); list-style: none; }
 .flash-flow-markers li { min-height: 5.5rem; padding: 1rem 0.75rem; color: var(--ink-40); font-size: 0.76rem; }
 .flash-flow-markers li span { display: block; margin-bottom: 0.35rem; letter-spacing: 0.1em; }
@@ -398,7 +398,7 @@ main { padding-top: 5.5rem; }
   .flash-status-line { align-items: start; flex-direction: column; padding: 1rem; letter-spacing: 0.06em; }
   .flash-intro, .flash-flow { padding: 1.5rem; }
   .flash-intro h3 { font-size: 3.6rem; }
-  .flash-flow { min-height: 47rem; height: 47rem; }
+  .flash-flow { min-height: 60rem; height: 60rem; }
   .flash-flow-markers { margin-bottom: 2.5rem; }
   .flash-flow-markers li { padding-inline: 0.25rem; font-size: 0.66rem; }
   .flash-panel h4 { font-size: 2.6rem; }
