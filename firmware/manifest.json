@@ -5,12 +5,12 @@
       "name": "AuraReader",
       "codename": "firefly",
       "version": "0.5.0",
-      "firmwareVersion": "v0.5.0-firefly.alpha.24",
+      "firmwareVersion": "v0.5.0-firefly.alpha.26",
       "installable": true,
-      "channel": "alpha.24",
+      "channel": "alpha.26",
       "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
-      "publishedAt": "2026-10-18T00:00:00+08:00",
-      "sha256": "a6cc312fa49debd5b39f948aa02369c1bbc4d5ac6c631daad9164c2eb76ad5b3",
+      "publishedAt": "2026-10-18T17:27:30+08:00",
+      "sha256": "a7e1eb84d2b9b26b1254afc8c828ce755f364d620e6fd310dbc703ec999a9bce",
       "size": 16777216,
       "new_install_prompt_erase": true,
       "builds": [
@@ -19,7 +19,7 @@
           "improv": false,
           "parts": [
             {
-              "path": "v0.5.0-firefly.alpha.24/AuraReader-v0.5.0-firefly.alpha.24-full-16MB.bin",
+              "path": "v0.5.0-firefly.alpha.26/AuraReader-v0.5.0-firefly.alpha.26-full-16MB.bin",
               "offset": 0
             }
           ]
