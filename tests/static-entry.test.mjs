@@ -8,17 +8,17 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.5\.1" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.5\.1"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.6\.0" \/>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.6\.0"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
 test("branch-hosted source modules are cache-busted together", async () => {
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(main, /"\.\/release-service\.js\?v=2\.5\.1"/);
-  assert.match(main, /"\.\/header-visibility\.js\?v=2\.5\.1"/);
-  assert.match(main, /"\.\/web-flasher\.js\?v=2\.5\.1"/);
+  assert.match(main, /"\.\/release-service\.js\?v=2\.6\.0"/);
+  assert.match(main, /"\.\/header-visibility\.js\?v=2\.6\.0"/);
+  assert.match(main, /"\.\/web-flasher\.js\?v=2\.6\.0"/);
 });
 
 test("image paths also resolve when GitHub Pages serves the repository root", async () => {
@@ -54,14 +54,19 @@ test("the verified AuraReader and official demo releases are presented as ready"
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
-test("the current public changelog records only alpha.26 optimization work", async () => {
+test("the public changelog names only the optimization theme for the latest two releases", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const releaseListStart = html.indexOf('<div class="release-list" data-visible-limit="2">');
+  const releaseListEnd = html.indexOf("</section>", releaseListStart);
+  const releaseList = html.slice(releaseListStart, releaseListEnd);
 
+  assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
+  assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.29<\/h3>/);
+  assert.match(html, /<h4>连续翻页与跨章性能优化<\/h4>/);
   assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.26<\/h3>/);
-  assert.match(html, /优化翻页性能分析/);
-  assert.match(html, /优化 EPUB 后台缓存耗时定位/);
-  assert.match(html, /优化字体性能计时口径/);
-  assert.doesNotMatch(html, /临时性能诊断|缓存诊断|诊断固件/);
+  assert.match(html, /<h4>性能分析与计时优化<\/h4>/);
+  assert.doesNotMatch(releaseList, /<ul>|<li>/);
+  assert.doesNotMatch(releaseList, /优化翻页性能分析|优化 EPUB 后台缓存耗时定位|优化字体性能计时口径/);
 });
 
 test("the changelog displays at most the latest two releases", async () => {

@@ -18,15 +18,15 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   assert.equal(auraReader.name, "AuraReader");
   assert.equal(auraReader.codename, "firefly");
   assert.equal(auraReader.version, "0.5.0");
-  assert.equal(auraReader.firmwareVersion, "v0.5.0-firefly.alpha.26");
+  assert.equal(auraReader.firmwareVersion, "v0.5.0-firefly.alpha.29");
   assert.equal(auraReader.installable, true);
-  assert.equal(auraReader.channel, "alpha.26");
+  assert.equal(auraReader.channel, "alpha.29");
   assert.equal(auraReader.size, 0x1000000);
-  assert.equal(auraReader.sha256, "a7e1eb84d2b9b26b1254afc8c828ce755f364d620e6fd310dbc703ec999a9bce");
+  assert.match(auraReader.sha256, /^[a-f0-9]{64}$/);
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
     {
-      path: "v0.5.0-firefly.alpha.26/AuraReader-v0.5.0-firefly.alpha.26-full-16MB.bin",
+      path: "v0.5.0-firefly.alpha.29/AuraReader-v0.5.0-firefly.alpha.29-full-16MB.bin",
       offset: 0,
     },
   ]);
@@ -50,7 +50,7 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   }
 });
 
-test("the verified alpha.26 release can enter the flashing flow", async () => {
+test("the verified alpha.29 release can enter the flashing flow", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const styles = await readFile(new URL("src/styles.css", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
@@ -65,14 +65,14 @@ test("the verified alpha.26 release can enter the flashing flow", async () => {
     version: "0.5.0",
     state: "available",
     installable: true,
-    channel: "alpha.26",
-    firmwareVersion: "v0.5.0-firefly.alpha.26",
+    channel: "alpha.29",
+    firmwareVersion: "v0.5.0-firefly.alpha.29",
     size: 0x1000000,
-    sha256: "a7e1eb84d2b9b26b1254afc8c828ce755f364d620e6fd310dbc703ec999a9bce",
+    sha256: "1".repeat(64),
     builds: [{
       chipFamily: "ESP32-S3",
       parts: [{
-        path: "v0.5.0-firefly.alpha.26/AuraReader-v0.5.0-firefly.alpha.26-full-16MB.bin",
+        path: "v0.5.0-firefly.alpha.29/AuraReader-v0.5.0-firefly.alpha.29-full-16MB.bin",
         offset: 0,
       }],
     }],
@@ -85,21 +85,21 @@ test("the verified alpha.26 release can enter the flashing flow", async () => {
     releases: [{
       codename: "firefly",
       version: "0.5.0",
-      firmwareVersion: "v0.5.0-firefly.alpha.26",
-      label: "firefly v0.5.0 alpha.26",
+      firmwareVersion: "v0.5.0-firefly.alpha.29",
+      label: "firefly v0.5.0 alpha.29",
       description: "严格 16 MiB 完整固件",
       badge: "",
       publishedAt: null,
-      channel: "alpha.26",
+      channel: "alpha.29",
       chipFamily: "ESP32-S3",
-      path: "./firmware/v0.5.0-firefly.alpha.26/AuraReader-v0.5.0-firefly.alpha.26-full-16MB.bin",
+      path: "./firmware/v0.5.0-firefly.alpha.29/AuraReader-v0.5.0-firefly.alpha.29-full-16MB.bin",
       size: 0x1000000,
-      sha256: "a7e1eb84d2b9b26b1254afc8c828ce755f364d620e6fd310dbc703ec999a9bce",
+      sha256: "1".repeat(64),
     }],
   });
   assert.match(html, /id="release-status">正在读取固件状态/);
   assert.match(html, /class="flash-product-name">AuraReader<\/span>/);
-  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.26<\/span>/s);
+  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.29<\/span>/s);
   assert.match(styles, /\.flash-release-identity\s*\{[^}]*font-size:\s*clamp\(1\.35rem,\s*2vw,\s*2rem\)/s);
   assert.match(main, /availability\.codename/);
   assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>请先选择设备/s);
@@ -108,14 +108,18 @@ test("the verified alpha.26 release can enter the flashing flow", async () => {
 });
 
 test("the merged image matches the verified release artifact", async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL("firmware/manifest.json", projectRoot), "utf8"),
+  );
+  const [release] = manifest.releases;
   const image = await readFile(
-    new URL("firmware/v0.5.0-firefly.alpha.26/AuraReader-v0.5.0-firefly.alpha.26-full-16MB.bin", projectRoot),
+    new URL("firmware/v0.5.0-firefly.alpha.29/AuraReader-v0.5.0-firefly.alpha.29-full-16MB.bin", projectRoot),
   );
   const digest = createHash("sha256").update(image).digest("hex");
 
   assert.equal(image[0], 0xe9, "expected an ESP image header");
   assert.equal(image.length, 0x1000000);
-  assert.equal(digest, "a7e1eb84d2b9b26b1254afc8c828ce755f364d620e6fd310dbc703ec999a9bce");
+  assert.equal(digest, release.sha256);
 });
 
 test("downloaded firmware must match the release size, image header and sha256", async () => {
