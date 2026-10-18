@@ -83,9 +83,9 @@ test("the verified alpha.17 release can enter the flashing flow", async () => {
   assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.17<\/span>/s);
   assert.match(styles, /\.flash-release-identity\s*\{[^}]*font-size:\s*clamp\(1\.35rem,\s*2vw,\s*2rem\)/s);
   assert.match(main, /availability\.codename/);
-  assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>正在读取/s);
+  assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>请先选择设备/s);
   assert.match(main, /availability\.state === "suspended"/);
-  assert.match(flasher, /destination === "erase" && !releaseReady/);
+  assert.match(flasher, /destination === "erase"[\s\S]*?!canAdvanceFromVersion/);
 });
 
 test("the merged image matches the verified release artifact", async () => {
@@ -119,7 +119,7 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
   assert.doesNotMatch(html, /esp-web-install-button|esp-web-tools@/);
-  assert.match(html, /id="flash-version-title"[^>]*>选择固件版本<\/h4>/);
+  assert.match(html, /id="flash-version-title"[^>]*>连接设备并选择固件<\/h4>/);
   assert.doesNotMatch(html, /name="firmware-version"[^>]+value="0\.1\.0"/s);
   assert.match(html, /正在读取可用固件/);
   assert.doesNotMatch(html, /flash-mode|data-flash-panel="console"|串口日志/);
@@ -146,20 +146,49 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
 });
 
 test("the inline flasher exposes testable safety gating", async () => {
-  const { canStartInstall } = await import(new URL("src/web-flasher.js", projectRoot));
+  const { canAdvanceFromVersion, canStartInstall } = await import(
+    new URL("src/web-flasher.js", projectRoot)
+  );
 
   assert.equal(
-    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: true, busy: false }),
+    canAdvanceFromVersion({ releaseReady: true, browserSupported: true, deviceSelected: false, busy: false }),
+    false,
+  );
+  assert.equal(
+    canAdvanceFromVersion({ releaseReady: true, browserSupported: true, deviceSelected: true, busy: false }),
+    true,
+  );
+
+  assert.equal(
+    canStartInstall({ releaseReady: true, browserSupported: true, deviceSelected: true, confirmed: true, busy: false }),
     true,
   );
   assert.equal(
-    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: false, busy: false }),
+    canStartInstall({ releaseReady: true, browserSupported: true, deviceSelected: false, confirmed: true, busy: false }),
     false,
   );
   assert.equal(
-    canStartInstall({ releaseReady: true, browserSupported: true, confirmed: true, busy: true }),
+    canStartInstall({ releaseReady: true, browserSupported: true, deviceSelected: true, confirmed: false, busy: false }),
     false,
   );
+  assert.equal(
+    canStartInstall({ releaseReady: true, browserSupported: true, deviceSelected: true, confirmed: true, busy: true }),
+    false,
+  );
+});
+
+test("the first step must select a serial device before firmware choices can advance", async () => {
+  const html = await readFile(new URL("index.html", projectRoot), "utf8");
+  const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
+
+  assert.match(html, /id="flash-version-title"[^>]*>连接设备并选择固件<\/h4>/);
+  assert.match(html, /id="flash-device-button"[^>]*>选择 AuraReader 设备<\/button>/);
+  assert.match(html, /id="flash-device-status"[^>]+role="status"[^>]*>尚未选择设备<\/p>/s);
+  assert.match(html, /data-flow-next="erase"[^>]+disabled/s);
+  assert.match(flasher, /deviceButton\?\.addEventListener\("click", async \(\) =>/);
+  assert.match(flasher, /selectedPort = await navigator\.serial\.requestPort\(\)/);
+  assert.match(flasher, /const port = selectedPort;/);
+  assert.doesNotMatch(flasher, /flashButton\?\.addEventListener\([\s\S]*?const port = await navigator\.serial\.requestPort\(\)/);
 });
 
 test("the guided steps keep a stable work area and aligned actions", async () => {

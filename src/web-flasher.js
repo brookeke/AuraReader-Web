@@ -1,7 +1,11 @@
 const ESPTOOL_MODULE_URL = "https://unpkg.com/esptool-js@0.6.1/bundle.js";
 
-export function canStartInstall({ releaseReady, browserSupported, confirmed, busy }) {
-  return releaseReady && browserSupported && confirmed && !busy;
+export function canAdvanceFromVersion({ releaseReady, browserSupported, deviceSelected, busy }) {
+  return releaseReady && browserSupported && deviceSelected && !busy;
+}
+
+export function canStartInstall({ releaseReady, browserSupported, deviceSelected, confirmed, busy }) {
+  return releaseReady && browserSupported && deviceSelected && confirmed && !busy;
 }
 
 async function sha256Hex(bytes) {
@@ -42,7 +46,10 @@ export function setupWebFlasher() {
   const eraseInputs = [...root.querySelectorAll("[name='erase-mode']")];
   const versionOptions = root.querySelector("[data-version-options]");
   const versionNextButton = root.querySelector('[data-flow-next="erase"]');
+  const deviceButton = root.querySelector("#flash-device-button");
+  const deviceStatus = root.querySelector("#flash-device-status");
   const versionSummary = root.querySelector("[data-version-summary]");
+  const deviceSummary = root.querySelector("[data-device-summary]");
   const confirmation = root.querySelector("#flash-confirmation");
   const flashButton = root.querySelector("#flash-button");
   const liveStatus = root.querySelector("#flash-live-status");
@@ -54,6 +61,7 @@ export function setupWebFlasher() {
   let busy = false;
   let releases = [];
   let selectedRelease = null;
+  let selectedPort = null;
 
   browserStatus.textContent = browserSupported ? "浏览器支持 Web Serial" : "请使用桌面版 Chrome 或 Edge";
   browserStatus.toggleAttribute("data-supported", browserSupported);
@@ -66,6 +74,32 @@ export function setupWebFlasher() {
     selectedRelease = releases.find((release) => release.version === version) ?? releases[0] ?? null;
     if (versionSummary) {
       versionSummary.textContent = selectedRelease ? selectedRelease.label : "—";
+    }
+  }
+
+  function updateVersionStep() {
+    const canAdvance = canAdvanceFromVersion({
+      releaseReady,
+      browserSupported,
+      deviceSelected: Boolean(selectedPort),
+      busy,
+    });
+    if (deviceButton) {
+      deviceButton.disabled = !browserSupported || busy;
+      deviceButton.classList.toggle("button-disabled", !browserSupported || busy);
+      deviceButton.classList.toggle("button-dark", browserSupported && !busy);
+      if (busy) deviceButton.textContent = "正在打开设备列表";
+      else if (!browserSupported) deviceButton.textContent = "当前浏览器不支持";
+      else deviceButton.textContent = selectedPort ? "重新选择设备" : "选择 AuraReader 设备";
+    }
+    if (versionNextButton) {
+      versionNextButton.disabled = !canAdvance;
+      versionNextButton.classList.toggle("button-disabled", !canAdvance);
+      versionNextButton.classList.toggle("button-dark", canAdvance);
+      if (!releaseReady) versionNextButton.textContent = "烧录已暂停";
+      else if (!browserSupported) versionNextButton.textContent = "浏览器不支持";
+      else if (!selectedPort) versionNextButton.textContent = "请先选择设备";
+      else versionNextButton.textContent = "下一步 →";
     }
   }
 
@@ -107,13 +141,8 @@ export function setupWebFlasher() {
       unavailable.textContent = "当前没有可安装固件。";
       versionOptions.append(unavailable);
     }
-    if (versionNextButton) {
-      versionNextButton.disabled = releases.length === 0;
-      versionNextButton.classList.toggle("button-disabled", releases.length === 0);
-      versionNextButton.classList.toggle("button-dark", releases.length > 0);
-      versionNextButton.textContent = releases.length > 0 ? "下一步 →" : "烧录已暂停";
-    }
     selectRelease(selectedRelease?.version);
+    updateVersionStep();
   }
 
   function showPanel(name) {
@@ -132,6 +161,7 @@ export function setupWebFlasher() {
     const enabled = canStartInstall({
       releaseReady,
       browserSupported,
+      deviceSelected: Boolean(selectedPort),
       confirmed: Boolean(confirmation?.checked),
       busy,
     });
@@ -141,7 +171,8 @@ export function setupWebFlasher() {
     if (busy) flashButton.textContent = "正在处理，请勿断开";
     else if (!browserSupported) flashButton.textContent = "当前浏览器不支持";
     else if (!releaseReady) flashButton.textContent = "固件暂不可用";
-    else flashButton.textContent = enabled ? "选择设备并开始" : "确认后开始";
+    else if (!selectedPort) flashButton.textContent = "请先选择设备";
+    else flashButton.textContent = enabled ? "开始写入" : "确认后开始";
   }
 
   function resetProgress() {
@@ -174,10 +205,45 @@ export function setupWebFlasher() {
     });
   });
 
+  deviceButton?.addEventListener("click", async () => {
+    if (!browserSupported || busy) return;
+    busy = true;
+    updateVersionStep();
+    updateInstallButton();
+    deviceStatus.textContent = "请在系统窗口中选择 AuraReader 的串口。";
+    deviceStatus.dataset.state = "working";
+
+    try {
+      selectedPort = await navigator.serial.requestPort();
+      deviceStatus.textContent = "设备已选择，可以继续选择固件。";
+      deviceStatus.dataset.state = "success";
+      if (deviceSummary) deviceSummary.textContent = "已选择（写入前校验）";
+      setProgress("connect", "complete");
+    } catch (error) {
+      selectedPort = null;
+      deviceStatus.textContent = errorMessage(error);
+      deviceStatus.dataset.state = "error";
+      if (deviceSummary) deviceSummary.textContent = "尚未选择";
+      resetProgress();
+    } finally {
+      busy = false;
+      updateVersionStep();
+      updateInstallButton();
+    }
+  });
+
   root.querySelectorAll("[data-flow-next]").forEach((button) => {
     button.addEventListener("click", () => {
       const destination = button.dataset.flowNext;
-      if (destination === "erase" && !releaseReady) return;
+      if (
+        destination === "erase" &&
+        !canAdvanceFromVersion({
+          releaseReady,
+          browserSupported,
+          deviceSelected: Boolean(selectedPort),
+          busy,
+        })
+      ) return;
       showPanel(destination || "erase");
     });
   });
@@ -189,21 +255,30 @@ export function setupWebFlasher() {
   confirmation?.addEventListener("change", updateInstallButton);
 
   flashButton?.addEventListener("click", async () => {
-    if (!canStartInstall({ releaseReady, browserSupported, confirmed: confirmation.checked, busy }) || !selectedRelease) return;
+    if (
+      !canStartInstall({
+        releaseReady,
+        browserSupported,
+        deviceSelected: Boolean(selectedPort),
+        confirmed: confirmation.checked,
+        busy,
+      }) ||
+      !selectedRelease
+    ) return;
 
     let transport;
+    const port = selectedPort;
     busy = true;
     updateInstallButton();
+    updateVersionStep();
     resetProgress();
-    setProgress("connect");
-    setLiveStatus("请在系统窗口中选择 AuraReader 设备。", "working");
+    setProgress("check");
+    setLiveStatus("正在连接第一步选择的设备…", "working");
 
     try {
-      const port = await navigator.serial.requestPort();
-      setProgress("check");
-      setLiveStatus("正在连接并识别芯片…", "working");
       const { ESPLoader, Transport } = await import(/* @vite-ignore */ ESPTOOL_MODULE_URL);
       transport = new Transport(port, true);
+      setLiveStatus("正在连接并识别芯片…", "working");
       const loader = new ESPLoader({
         transport,
         baudrate: 460800,
@@ -261,6 +336,7 @@ export function setupWebFlasher() {
         try { await transport.disconnect(); } catch {}
       }
       busy = false;
+      updateVersionStep();
       updateInstallButton();
     }
   });
@@ -272,6 +348,7 @@ export function setupWebFlasher() {
     setReleases(nextReleases) {
       renderReleaseOptions(Array.isArray(nextReleases) ? nextReleases : []);
       releaseReady = releases.length > 0;
+      updateVersionStep();
       updateInstallButton();
     },
   };

@@ -223,6 +223,11 @@ main { padding-top: 5.5rem; }
 .flash-flow-markers li[data-complete] { color: var(--ink-60); }
 .flash-panel:not([hidden]) { min-height: 0; display: flex; flex-direction: column; }
 .flash-panel h4 { max-width: 10em; margin: 1.5rem 0 2.5rem; font-size: clamp(2.4rem, 4vw, 4.2rem); letter-spacing: -0.05em; }
+.flash-device-picker { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.7rem 1.25rem; margin-bottom: 1rem; padding: 1.15rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.flash-device-picker .button { grid-column: 2; grid-row: 1 / span 2; min-width: 12rem; }
+.flash-device-picker > p { grid-column: 1; min-height: 1.2rem; margin: 0; color: var(--ink-60); font-size: 0.78rem; }
+.flash-device-picker > p[data-state="error"] { color: var(--error); }
+.flash-device-picker > p[data-state="success"] { color: var(--ink); font-weight: 600; }
 .version-options, .erase-options { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
 .flash-option { min-height: 6.4rem; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.25rem; padding: 1.3rem; border: 1px solid var(--line); cursor: pointer; }
 .flash-option:has(input:checked) { border-color: var(--ink); background: rgba(28, 28, 28, 0.04); }
@@ -397,6 +402,9 @@ main { padding-top: 5.5rem; }
   .flash-flow-markers { margin-bottom: 2.5rem; }
   .flash-flow-markers li { padding-inline: 0.25rem; font-size: 0.66rem; }
   .flash-panel h4 { font-size: 2.6rem; }
+  .flash-device-picker { grid-template-columns: 1fr; align-items: stretch; }
+  .flash-device-picker .button, .flash-device-picker > p { grid-column: 1; grid-row: auto; }
+  .flash-device-picker .button { width: 100%; }
   .flash-option { grid-template-columns: auto 1fr; padding: 1rem; }
   .option-tag { grid-column: 2; }
   .flash-panel-actions .button { gap: 1rem; }

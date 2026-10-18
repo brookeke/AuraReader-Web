@@ -113,5 +113,5 @@ firmware/v0.5.0-firefly.alpha.17/AuraReader-v0.5.0-firefly.alpha.17-full-16MB.bi
 
 ## 发布说明
 
-当前官网版本为 `2.2.5`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `2.2.6`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
 
