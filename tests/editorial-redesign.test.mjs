@@ -113,7 +113,7 @@ test("release catalog normalization keeps only valid installable entries", async
   const { parseReleaseCatalog } = await import(new URL("src/release-service.js", projectRoot));
   const releases = parseReleaseCatalog({
     releases: [
-      { codename: "Spark", version: "0.3.0", firmwareVersion: "v0.3.0-Spark", channel: "stable", path: "./firmware/v0.3.0/full.bin", size: 4, sha256: "a".repeat(64) },
+      { codename: "Spark", version: "0.3.0", firmwareVersion: "v0.3.0-Spark", channel: "stable", displayName: "官方演示 Demo", description: "硬件功能演示与自检", badge: "官方演示", path: "./firmware/v0.3.0/full.bin", size: 4, sha256: "a".repeat(64) },
       { codename: "firefly", version: "0.2.0", channel: "beta", path: "./firmware/v0.2.0/full.bin", installable: false },
       { codename: "firefly", version: "0.1.0", firmwareVersion: "v0.1.0-firefly.alpha.1", channel: "alpha.1", path: "./firmware/v0.1.0/full.bin", size: 4, sha256: "b".repeat(64) },
     ],
@@ -123,6 +123,9 @@ test("release catalog normalization keeps only valid installable entries", async
   assert.deepEqual(releases.map(({ version }) => version), ["0.3.0", "0.1.0"]);
   assert.deepEqual(releases.map(({ codename }) => codename), ["Spark", "firefly"]);
   assert.equal(releases[0].path, "./firmware/v0.3.0/full.bin");
+  assert.equal(releases[0].label, "官方演示 Demo");
+  assert.equal(releases[0].description, "硬件功能演示与自检");
+  assert.equal(releases[0].badge, "官方演示");
   assert.equal(releases[1].firmwareVersion, "v0.1.0-firefly.alpha.1");
   assert.equal(releases[1].size, 4);
   assert.equal(releases[1].sha256, "b".repeat(64));

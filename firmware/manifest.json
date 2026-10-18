@@ -1,23 +1,57 @@
 {
-  "name": "AuraReader",
-  "codename": "firefly",
-  "version": "0.5.0",
-  "firmwareVersion": "v0.5.0-firefly.alpha.24",
   "state": "available",
-  "installable": true,
-  "channel": "alpha.24",
-  "publishedAt": "2026-10-18T00:00:00+08:00",
-  "sha256": "a6cc312fa49debd5b39f948aa02369c1bbc4d5ac6c631daad9164c2eb76ad5b3",
-  "size": 16777216,
-  "new_install_prompt_erase": true,
-  "builds": [
+  "releases": [
     {
-      "chipFamily": "ESP32-S3",
-      "improv": false,
-      "parts": [
+      "name": "AuraReader",
+      "codename": "firefly",
+      "version": "0.5.0",
+      "firmwareVersion": "v0.5.0-firefly.alpha.24",
+      "installable": true,
+      "channel": "alpha.24",
+      "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
+      "publishedAt": "2026-10-18T00:00:00+08:00",
+      "sha256": "a6cc312fa49debd5b39f948aa02369c1bbc4d5ac6c631daad9164c2eb76ad5b3",
+      "size": 16777216,
+      "new_install_prompt_erase": true,
+      "builds": [
         {
-          "path": "v0.5.0-firefly.alpha.24/AuraReader-v0.5.0-firefly.alpha.24-full-16MB.bin",
-          "offset": 0
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "v0.5.0-firefly.alpha.24/AuraReader-v0.5.0-firefly.alpha.24-full-16MB.bin",
+              "offset": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "小纸 Pico",
+      "codename": "official-demo",
+      "version": "6a247cc",
+      "firmwareVersion": "Read_Pico-6a247cc",
+      "installable": true,
+      "channel": "official",
+      "displayName": "小纸 Pico 官方演示 Demo",
+      "description": "硬件功能演示与自检",
+      "badge": "官方演示",
+      "publishedAt": "2026-10-11T20:54:45+08:00",
+      "sourceUrl": "https://github.com/MindReset/read_pico_firmware",
+      "sourceRevision": "6a247cc94420b85c650b32a6b2c063a360070eee",
+      "sha256": "afccf817f8b827110c3564630b672ceff000389f02b7cd2926534ff52af24b0c",
+      "size": 16777216,
+      "new_install_prompt_erase": true,
+      "builds": [
+        {
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "read-pico-demo-6a247cc/Read-Pico-official-demo-6a247cc-full-16MB.bin",
+              "offset": 0
+            }
+          ]
         }
       ]
     }

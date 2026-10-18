@@ -9,6 +9,9 @@ function normalizeRelease(value) {
   const channel = typeof value?.channel === "string" && value.channel.trim()
     ? value.channel.trim()
     : "stable";
+  const displayName = typeof value?.displayName === "string" ? value.displayName.trim() : "";
+  const description = typeof value?.description === "string" ? value.description.trim() : "";
+  const badge = typeof value?.badge === "string" ? value.badge.trim() : "";
   const sha256 = typeof value?.sha256 === "string" ? value.sha256.trim().toLowerCase() : "";
   const size = Number(value?.size);
   if (
@@ -38,7 +41,9 @@ function normalizeRelease(value) {
     codename,
     version,
     firmwareVersion,
-    label: `${codename} v${version}${channel === "stable" ? "" : ` ${channel}`}`,
+    label: displayName || `${codename} v${version}${channel === "stable" ? "" : ` ${channel}`}`,
+    description: description || "严格 16 MiB 完整固件",
+    badge,
     publishedAt:
       typeof value.publishedAt === "string" && !Number.isNaN(Date.parse(value.publishedAt))
         ? value.publishedAt

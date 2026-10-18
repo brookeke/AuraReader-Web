@@ -34,13 +34,13 @@ test("the footer does not position AuraReader as made only for Xiao Zhi Pico", a
   assert.doesNotMatch(html, /为小纸\s*Pico\s*而作/i);
 });
 
-test("the verified alpha release is presented as ready", async () => {
+test("the verified AuraReader and official demo releases are presented as ready", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
   assert.match(html, /v0\.5\.0/);
   assert.doesNotMatch(html, /固件加紧开发中/);
-  assert.match(html, /alpha\.24 已通过构建与完整镜像校验/);
+  assert.match(html, /AuraReader 与小纸 Pico 官方演示固件均提供完整镜像/);
   assert.doesNotMatch(html, /当前暂停网页烧录/);
   assert.match(main, /固件 \$\{release\.label\} 已就绪/);
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);

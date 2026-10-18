@@ -125,12 +125,12 @@ export function setupWebFlasher() {
       const title = document.createElement("strong");
       title.textContent = release.label;
       const description = document.createElement("small");
-      description.textContent = "严格 16 MiB 完整固件";
+      description.textContent = release.description;
       copy.append(title, description);
 
       const tag = document.createElement("span");
       tag.className = "option-tag";
-      tag.textContent = index === 0 ? "当前版本" : "可安装";
+      tag.textContent = index === 0 ? "当前版本" : release.badge || "可安装";
       label.append(input, copy, tag);
       versionOptions.append(label);
     });

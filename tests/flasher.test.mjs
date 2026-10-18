@@ -5,21 +5,24 @@ import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
 
-test("the web flasher publishes one complete ESP32-S3 image", async () => {
+test("the web flasher publishes AuraReader and the official demo as complete ESP32-S3 images", async () => {
   const manifest = JSON.parse(
     await readFile(new URL("firmware/manifest.json", projectRoot), "utf8"),
   );
-  const build = manifest.builds.find((item) => item.chipFamily === "ESP32-S3");
+  const [auraReader, officialDemo] = manifest.releases;
+  const build = auraReader.builds.find((item) => item.chipFamily === "ESP32-S3");
+  const demoBuild = officialDemo.builds.find((item) => item.chipFamily === "ESP32-S3");
 
-  assert.equal(manifest.name, "AuraReader");
-  assert.equal(manifest.codename, "firefly");
-  assert.equal(manifest.version, "0.5.0");
-  assert.equal(manifest.firmwareVersion, "v0.5.0-firefly.alpha.24");
   assert.equal(manifest.state, "available");
-  assert.equal(manifest.installable, true);
-  assert.equal(manifest.channel, "alpha.24");
-  assert.equal(manifest.size, 0x1000000);
-  assert.equal(manifest.sha256, "a6cc312fa49debd5b39f948aa02369c1bbc4d5ac6c631daad9164c2eb76ad5b3");
+  assert.equal(manifest.releases.length, 2);
+  assert.equal(auraReader.name, "AuraReader");
+  assert.equal(auraReader.codename, "firefly");
+  assert.equal(auraReader.version, "0.5.0");
+  assert.equal(auraReader.firmwareVersion, "v0.5.0-firefly.alpha.24");
+  assert.equal(auraReader.installable, true);
+  assert.equal(auraReader.channel, "alpha.24");
+  assert.equal(auraReader.size, 0x1000000);
+  assert.equal(auraReader.sha256, "a6cc312fa49debd5b39f948aa02369c1bbc4d5ac6c631daad9164c2eb76ad5b3");
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
     {
@@ -28,9 +31,23 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
     },
   ]);
 
-  const imageUrl = new URL(`firmware/${build.parts[0].path}`, projectRoot);
-  await access(imageUrl);
-  assert.equal((await stat(imageUrl)).size, 0x1000000, "release image must be exactly 16 MiB");
+  assert.equal(officialDemo.name, "小纸 Pico");
+  assert.equal(officialDemo.displayName, "小纸 Pico 官方演示 Demo");
+  assert.equal(officialDemo.description, "硬件功能演示与自检");
+  assert.equal(officialDemo.sourceRevision, "6a247cc94420b85c650b32a6b2c063a360070eee");
+  assert.equal(officialDemo.installable, true);
+  assert.equal(officialDemo.size, 0x1000000);
+  assert.ok(demoBuild, "expected an official demo ESP32-S3 build");
+
+  for (const release of [auraReader, officialDemo]) {
+    const releaseBuild = release.builds.find((item) => item.chipFamily === "ESP32-S3");
+    const imageUrl = new URL(`firmware/${releaseBuild.parts[0].path}`, projectRoot);
+    const image = await readFile(imageUrl);
+    const digest = createHash("sha256").update(image).digest("hex");
+    assert.equal(image[0], 0xe9, "expected an ESP image header");
+    assert.equal((await stat(imageUrl)).size, 0x1000000, "release image must be exactly 16 MiB");
+    assert.equal(digest, release.sha256, "release image must match its manifest digest");
+  }
 });
 
 test("the verified alpha.24 release can enter the flashing flow", async () => {
@@ -70,6 +87,8 @@ test("the verified alpha.24 release can enter the flashing flow", async () => {
       version: "0.5.0",
       firmwareVersion: "v0.5.0-firefly.alpha.24",
       label: "firefly v0.5.0 alpha.24",
+      description: "严格 16 MiB 完整固件",
+      badge: "",
       publishedAt: null,
       channel: "alpha.24",
       chipFamily: "ESP32-S3",
