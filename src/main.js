@@ -150,24 +150,30 @@ async function loadReleaseCatalog(onReleases) {
   const status = query("#release-status");
   const releaseCodename = query("#flash-release-codename");
   const releaseVersion = query("#flash-release-version");
+  const releaseChannel = query("#flash-release-channel");
   if (!status) return;
 
   try {
     const availability = await getReleaseAvailability();
     const ready = availability.state === "available";
-    if (availability.codename && releaseCodename) {
-      releaseCodename.textContent = availability.codename;
-    }
-    if (availability.version && releaseVersion) {
-      releaseVersion.textContent = `v${availability.version}`;
-    }
     if (availability.state === "suspended") {
+      if (availability.codename && releaseCodename) releaseCodename.textContent = availability.codename;
+      if (availability.version && releaseVersion) releaseVersion.textContent = `v${availability.version}`;
+      if (releaseChannel) releaseChannel.hidden = true;
       status.textContent = availability.version
         ? `固件 v${availability.version} 烧录已暂停`
         : "固件烧录已暂停";
     } else {
       const [release] = availability.releases;
-      status.textContent = ready ? `固件 ${release.version} 已就绪` : "固件暂未发布";
+      if (release) {
+        if (releaseCodename) releaseCodename.textContent = release.codename;
+        if (releaseVersion) releaseVersion.textContent = `v${release.version}`;
+        if (releaseChannel) {
+          releaseChannel.textContent = release.channel;
+          releaseChannel.hidden = release.channel === "stable";
+        }
+      }
+      status.textContent = ready ? `固件 ${release.label} 已就绪` : "固件暂未发布";
     }
     status.closest(".flash-status-line")?.toggleAttribute("data-ready", ready);
     onReleases(availability.releases);

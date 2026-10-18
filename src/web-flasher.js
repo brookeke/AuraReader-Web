@@ -4,6 +4,24 @@ export function canStartInstall({ releaseReady, browserSupported, confirmed, bus
   return releaseReady && browserSupported && confirmed && !busy;
 }
 
+async function sha256Hex(bytes) {
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export async function validateFirmwareImage(firmware, release) {
+  if (!(firmware instanceof Uint8Array) || firmware[0] !== 0xe9) {
+    throw new Error("下载内容不是有效的 ESP 镜像，已停止写入。");
+  }
+  if (firmware.length !== release.size) {
+    throw new Error(`固件大小校验失败：应为 ${release.size} 字节，实际为 ${firmware.length} 字节。`);
+  }
+  const digest = await sha256Hex(firmware);
+  if (digest !== release.sha256) {
+    throw new Error("固件 SHA-256 校验失败，已停止写入。请刷新页面后重试。");
+  }
+}
+
 function hasWebSerial() {
   return typeof navigator !== "undefined" && "serial" in navigator && window.isSecureContext;
 }
@@ -47,9 +65,7 @@ export function setupWebFlasher() {
   function selectRelease(version) {
     selectedRelease = releases.find((release) => release.version === version) ?? releases[0] ?? null;
     if (versionSummary) {
-      versionSummary.textContent = selectedRelease
-        ? `${selectedRelease.codename} v${selectedRelease.version}`
-        : "—";
+      versionSummary.textContent = selectedRelease ? selectedRelease.label : "—";
     }
   }
 
@@ -73,9 +89,9 @@ export function setupWebFlasher() {
       const copy = document.createElement("span");
       copy.className = "option-copy";
       const title = document.createElement("strong");
-      title.textContent = `${release.codename} v${release.version}`;
+      title.textContent = release.label;
       const description = document.createElement("small");
-      description.textContent = `${release.channel === "stable" ? "稳定版" : release.channel} · 完整固件`;
+      description.textContent = "严格 16 MiB 完整固件";
       copy.append(title, description);
 
       const tag = document.createElement("span");
@@ -88,7 +104,7 @@ export function setupWebFlasher() {
     if (releases.length === 0) {
       const unavailable = document.createElement("p");
       unavailable.className = "release-unavailable";
-      unavailable.textContent = "v0.1.0 正在修复，当前暂停网页烧录。";
+      unavailable.textContent = "当前没有可安装固件。";
       versionOptions.append(unavailable);
     }
     if (versionNextButton) {
@@ -154,7 +170,7 @@ export function setupWebFlasher() {
 
   eraseInputs.forEach((input) => {
     input.addEventListener("change", () => {
-      eraseSummary.textContent = input.value === "full" ? "完整擦除后写入" : "标准写入";
+      eraseSummary.textContent = input.value === "erase" ? "先擦除再完整覆盖" : "完整覆盖";
     });
   });
 
@@ -204,21 +220,27 @@ export function setupWebFlasher() {
       if (!String(chipName).toUpperCase().includes("ESP32-S3")) {
         throw new Error(`检测到 ${chipName}，本固件仅适用于 ESP32-S3。`);
       }
+      const detectedFlashSize = await loader.detectFlashSize();
+      if (detectedFlashSize !== "16MB") {
+        throw new Error(`检测到 ${detectedFlashSize || "未知容量"} Flash，本固件仅适用于 16MB 设备。`);
+      }
 
-      setProgress("write");
-      setLiveStatus("正在下载固件并准备写入…", "working");
+      setLiveStatus("正在下载并校验固件完整性…", "working");
       const response = await fetch(new URL(selectedRelease.path, window.location.href));
       if (!response.ok) throw new Error(`固件下载失败（HTTP ${response.status}）。`);
       const firmware = new Uint8Array(await response.arrayBuffer());
-      const eraseAll = selectedValue(eraseInputs) === "full";
+      await validateFirmwareImage(firmware, selectedRelease);
+      const eraseAll = selectedValue(eraseInputs) === "erase";
 
+      setProgress("write");
+      setLiveStatus("固件校验通过，开始写入完整镜像…", "working");
       await loader.writeFlash({
         fileArray: [{ data: firmware, address: 0 }],
-        flashMode: "dio",
-        flashFreq: "80m",
-        flashSize: "16MB",
+        flashMode: "keep",
+        flashFreq: "keep",
+        flashSize: "keep",
         eraseAll,
-        compress: true,
+        compress: false,
         reportProgress(_fileIndex, written, total) {
           const percent = Math.min(100, Math.round((written / total) * 100));
           setLiveStatus(`正在写入固件 ${percent}% · 请勿断开 USB`, "working");

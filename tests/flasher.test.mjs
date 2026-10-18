@@ -13,20 +13,27 @@ test("the web flasher publishes one complete ESP32-S3 image", async () => {
 
   assert.equal(manifest.name, "AuraReader");
   assert.equal(manifest.codename, "firefly");
-  assert.equal(manifest.version, "0.1.0");
-  assert.equal(manifest.state, "suspended");
-  assert.equal(manifest.installable, false);
+  assert.equal(manifest.version, "0.5.0");
+  assert.equal(manifest.firmwareVersion, "v0.5.0-firefly.alpha.17");
+  assert.equal(manifest.state, "available");
+  assert.equal(manifest.installable, true);
+  assert.equal(manifest.channel, "alpha.17");
+  assert.equal(manifest.size, 0x1000000);
+  assert.equal(manifest.sha256, "96bfa965b6f3cbffe0c4e0c50b2269dd03f95764db842e84d854bdc3447764ec");
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
-    { path: "v0.1.0/aurareader-v0.1.0.bin", offset: 0 },
+    {
+      path: "v0.5.0-firefly.alpha.17/AuraReader-v0.5.0-firefly.alpha.17-full-16MB.bin",
+      offset: 0,
+    },
   ]);
 
   const imageUrl = new URL(`firmware/${build.parts[0].path}`, projectRoot);
   await access(imageUrl);
-  assert.ok((await stat(imageUrl)).size > 0x910000, "merged image must include the font partition");
+  assert.equal((await stat(imageUrl)).size, 0x1000000, "release image must be exactly 16 MiB");
 });
 
-test("the suspended v0.1.0 release cannot enter the flashing flow", async () => {
+test("the verified alpha.17 release can enter the flashing flow", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const styles = await readFile(new URL("src/styles.css", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
@@ -38,36 +45,72 @@ test("the suspended v0.1.0 release cannot enter the flashing flow", async () => 
   const availability = parseReleaseAvailability({
     name: "AuraReader",
     codename: "firefly",
-    version: "0.1.0",
-    state: "suspended",
-    installable: false,
-    builds: [],
+    version: "0.5.0",
+    state: "available",
+    installable: true,
+    channel: "alpha.17",
+    firmwareVersion: "v0.5.0-firefly.alpha.17",
+    size: 0x1000000,
+    sha256: "96bfa965b6f3cbffe0c4e0c50b2269dd03f95764db842e84d854bdc3447764ec",
+    builds: [{
+      chipFamily: "ESP32-S3",
+      parts: [{
+        path: "v0.5.0-firefly.alpha.17/AuraReader-v0.5.0-firefly.alpha.17-full-16MB.bin",
+        offset: 0,
+      }],
+    }],
   });
 
   assert.deepEqual(availability, {
-    state: "suspended",
+    state: "available",
     codename: "firefly",
-    version: "0.1.0",
-    releases: [],
+    version: "0.5.0",
+    releases: [{
+      codename: "firefly",
+      version: "0.5.0",
+      firmwareVersion: "v0.5.0-firefly.alpha.17",
+      label: "firefly v0.5.0 alpha.17",
+      publishedAt: null,
+      channel: "alpha.17",
+      chipFamily: "ESP32-S3",
+      path: "./firmware/v0.5.0-firefly.alpha.17/AuraReader-v0.5.0-firefly.alpha.17-full-16MB.bin",
+      size: 0x1000000,
+      sha256: "96bfa965b6f3cbffe0c4e0c50b2269dd03f95764db842e84d854bdc3447764ec",
+    }],
   });
-  assert.match(html, /id="release-status">固件 v0\.1\.0 烧录已暂停/);
+  assert.match(html, /id="release-status">正在读取固件状态/);
   assert.match(html, /class="flash-product-name">AuraReader<\/span>/);
-  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.1\.0<\/span>/s);
+  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.17<\/span>/s);
   assert.match(styles, /\.flash-release-identity\s*\{[^}]*font-size:\s*clamp\(1\.35rem,\s*2vw,\s*2rem\)/s);
   assert.match(main, /availability\.codename/);
-  assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>烧录已暂停/s);
+  assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>正在读取/s);
   assert.match(main, /availability\.state === "suspended"/);
   assert.match(flasher, /destination === "erase" && !releaseReady/);
 });
 
 test("the merged image matches the verified release artifact", async () => {
   const image = await readFile(
-    new URL("firmware/v0.1.0/aurareader-v0.1.0.bin", projectRoot),
+    new URL("firmware/v0.5.0-firefly.alpha.17/AuraReader-v0.5.0-firefly.alpha.17-full-16MB.bin", projectRoot),
   );
   const digest = createHash("sha256").update(image).digest("hex");
 
   assert.equal(image[0], 0xe9, "expected an ESP image header");
-  assert.equal(digest, "76d382874ef211e15cde34f42bf55abe4e5e04ddf49554e545fc3fda89729ef8");
+  assert.equal(image.length, 0x1000000);
+  assert.equal(digest, "96bfa965b6f3cbffe0c4e0c50b2269dd03f95764db842e84d854bdc3447764ec");
+});
+
+test("downloaded firmware must match the release size, image header and sha256", async () => {
+  const { validateFirmwareImage } = await import(new URL("src/web-flasher.js", projectRoot));
+  const firmware = new Uint8Array([0xe9, 0x03, 0x02, 0x4f]);
+  const release = {
+    size: firmware.length,
+    sha256: createHash("sha256").update(firmware).digest("hex"),
+  };
+
+  await assert.doesNotReject(validateFirmwareImage(firmware, release));
+  await assert.rejects(validateFirmwareImage(firmware, { ...release, size: 5 }), /大小校验失败/);
+  await assert.rejects(validateFirmwareImage(firmware, { ...release, sha256: "0".repeat(64) }), /SHA-256 校验失败/);
+  await assert.rejects(validateFirmwareImage(new Uint8Array([0, 1, 2, 3]), release), /ESP 镜像/);
 });
 
 test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog", async () => {
@@ -76,13 +119,13 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
   assert.doesNotMatch(html, /esp-web-install-button|esp-web-tools@/);
-  assert.match(html, /id="flash-version-title"[^>]*>烧录暂时关闭<\/h4>/);
+  assert.match(html, /id="flash-version-title"[^>]*>选择固件版本<\/h4>/);
   assert.doesNotMatch(html, /name="firmware-version"[^>]+value="0\.1\.0"/s);
-  assert.match(html, /class="release-unavailable"/);
+  assert.match(html, /正在读取可用固件/);
   assert.doesNotMatch(html, /flash-mode|data-flash-panel="console"|串口日志/);
   assert.doesNotMatch(flasher, /consoleButton|disconnectConsole|serialReader/);
-  assert.match(html, /name="erase-mode"[^>]+value="standard"[^>]+checked/s);
-  assert.match(html, /name="erase-mode"[^>]+value="full"/s);
+  assert.match(html, /name="erase-mode"[^>]+value="overwrite"[^>]+checked/s);
+  assert.match(html, /name="erase-mode"[^>]+value="erase"/s);
   assert.match(html, /id="flash-confirmation"/);
   assert.match(html, /id="flash-live-status"[^>]+role="status"/s);
   assert.match(main, /setupWebFlasher/);
@@ -91,6 +134,15 @@ test("the flasher uses an inline guided flow instead of the ESP Web Tools dialog
   assert.match(flasher, /eraseAll[,}]/);
   assert.match(flasher, /writeFlash/);
   assert.match(flasher, /after\("hard_reset"\)/);
+  assert.match(flasher, /detectFlashSize\(\)/);
+  assert.match(flasher, /detectedFlashSize !== "16MB"/);
+  assert.match(flasher, /validateFirmwareImage\(firmware, selectedRelease\)/);
+  assert.match(flasher, /flashMode:\s*"keep"/);
+  assert.match(flasher, /flashFreq:\s*"keep"/);
+  assert.match(flasher, /flashSize:\s*"keep"/);
+  assert.match(flasher, /compress:\s*false/);
+  assert.match(html, /设备内部数据将被覆盖/);
+  assert.doesNotMatch(html, /保留可保留的数据/);
 });
 
 test("the inline flasher exposes testable safety gating", async () => {

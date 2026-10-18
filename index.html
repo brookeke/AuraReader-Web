@@ -46,7 +46,7 @@
           <div><dt>设备</dt><dd>ESP32-S3</dd></div>
           <div><dt>阅读</dt><dd>TXT / EPUB</dd></div>
           <div><dt>传输</dt><dd>TF 卡 / Wi-Fi</dd></div>
-          <div><dt>版本</dt><dd>v0.1.0</dd></div>
+          <div><dt>版本</dt><dd>firefly v0.5.0 alpha.17</dd></div>
         </dl>
       </section>
 
@@ -97,12 +97,12 @@
         <header class="section-heading reveal">
           <p class="section-index">03 / WEB FLASHER</p>
           <h2 id="flasher-title">从浏览器，<br /><span>写入 AuraReader。</span></h2>
-          <p>v0.1.0 正在修复，网页烧录暂时关闭。修复完成并通过验证后将重新开放。</p>
+          <p>firefly v0.5.0 alpha.17 已通过构建与完整镜像校验，可使用桌面版 Chrome 或 Edge 写入设备。</p>
         </header>
 
         <div class="flash-workbench reveal" data-flasher>
           <div class="flash-status-line">
-            <span id="release-status">固件 v0.1.0 烧录已暂停</span>
+            <span id="release-status">正在读取固件状态</span>
             <span id="browser-status">正在检查浏览器</span>
           </div>
           <div class="flash-workbench-grid">
@@ -112,10 +112,11 @@
                 <span class="flash-product-name">AuraReader</span>
                 <span class="flash-release-identity">
                   <span id="flash-release-codename">firefly</span>
-                  <span id="flash-release-version">v0.1.0</span>
+                  <span id="flash-release-version">v0.5.0</span>
+                  <span id="flash-release-channel">alpha.17</span>
                 </span>
               </h3>
-              <p>v0.1.0 正在修复，当前暂停网页烧录。固件修复并完成验证后，此处会重新开放。</p>
+              <p>alpha.17 提供严格 16 MiB 全量镜像。写入将覆盖设备内部数据，过程耗时较长，请保持 USB 连接。</p>
               <a class="text-link" href="#faq">查看刷机问题 <span aria-hidden="true">→</span></a>
             </aside>
 
@@ -128,27 +129,27 @@
 
               <section class="flash-panel" data-flash-panel="version" aria-labelledby="flash-version-title">
                 <p class="step-count">步骤 1 / 3</p>
-                <h4 id="flash-version-title" tabindex="-1">烧录暂时关闭</h4>
+                <h4 id="flash-version-title" tabindex="-1">选择固件版本</h4>
                 <fieldset class="version-options" data-version-options>
                   <legend class="visually-hidden">固件版本</legend>
-                  <p class="release-unavailable">v0.1.0 正在修复，当前暂停网页烧录。</p>
+                  <p class="release-unavailable">正在读取可用固件…</p>
                 </fieldset>
-                <div class="flash-panel-actions"><span></span><button class="button button-disabled" type="button" data-flow-next="erase" disabled>烧录已暂停</button></div>
+                <div class="flash-panel-actions"><span></span><button class="button button-disabled" type="button" data-flow-next="erase" disabled>正在读取</button></div>
               </section>
 
               <section class="flash-panel" data-flash-panel="erase" aria-labelledby="flash-erase-title" hidden>
                 <p class="step-count">步骤 2 / 3</p>
-                <h4 id="flash-erase-title" tabindex="-1">怎样处理设备数据？</h4>
+                <h4 id="flash-erase-title" tabindex="-1">确认设备数据处理</h4>
                 <fieldset class="erase-options">
                   <legend class="visually-hidden">数据处理方式</legend>
                   <label class="flash-option">
-                    <input type="radio" name="erase-mode" value="standard" checked />
-                    <span class="option-copy"><strong>标准写入</strong><small>保留可保留的数据，适合日常更新</small></span>
-                    <span class="option-tag">建议</span>
+                    <input type="radio" name="erase-mode" value="overwrite" checked />
+                    <span class="option-copy"><strong>完整覆盖</strong><small>写入 16 MiB 全量镜像，设备内部数据将被覆盖</small></span>
+                    <span class="option-tag">默认</span>
                   </label>
                   <label class="flash-option">
-                    <input type="radio" name="erase-mode" value="full" />
-                    <span class="option-copy"><strong>完整擦除</strong><small>清除设备全部数据后重新写入</small></span>
+                    <input type="radio" name="erase-mode" value="erase" />
+                    <span class="option-copy"><strong>先擦除再写入</strong><small>先整片擦除，再写入同一完整镜像</small></span>
                   </label>
                 </fieldset>
                 <div class="flash-panel-actions"><button class="text-button" type="button" data-flow-back="version">← 返回</button><button class="button button-dark" type="button" data-flow-next="confirm">下一步 <span aria-hidden="true">→</span></button></div>
@@ -158,11 +159,11 @@
                 <p class="step-count">步骤 3 / 3</p>
                 <h4 id="flash-confirm-title" tabindex="-1">确认后开始写入</h4>
                 <dl class="flash-summary">
-                  <div><dt>固件版本</dt><dd data-version-summary>v0.1.0</dd></div>
+                  <div><dt>固件版本</dt><dd data-version-summary>firefly v0.5.0 alpha.17</dd></div>
                   <div><dt>设备型号</dt><dd>ESP32-S3</dd></div>
-                  <div><dt>数据处理</dt><dd data-erase-summary>标准写入</dd></div>
+                  <div><dt>数据处理</dt><dd data-erase-summary>完整覆盖</dd></div>
                 </dl>
-                <label class="confirmation"><input id="flash-confirmation" type="checkbox" /><span>我已确认设备型号，并了解刷写过程中不能断开 USB 连接。</span></label>
+                <label class="confirmation"><input id="flash-confirmation" type="checkbox" /><span>我已确认设备型号，了解设备内部数据将被覆盖，并会在刷写过程中保持 USB 连接。</span></label>
                 <p id="flash-live-status" class="flash-live-status" role="status" aria-live="polite">准备就绪后，在系统窗口中选择设备串口。</p>
                 <div class="flash-panel-actions"><button class="text-button" type="button" data-flow-back="erase">← 返回</button><button id="flash-button" class="button button-disabled" type="button" disabled>确认后开始</button></div>
               </section>
@@ -211,8 +212,8 @@
           <p>每一个公开版本都在这里留下清晰记录。</p>
         </header>
         <article class="release-entry reveal">
-          <div class="release-meta"><p>STABLE RELEASE</p><h3>v0.1.0</h3><time datetime="2026-10-15">2026.10.15</time></div>
-          <div><h4>首个公开版本</h4><ul><li>本地 TXT 与 EPUB 阅读</li><li>阅读排版、进度与时长记录</li><li>TF 卡书库与 Wi-Fi 传书</li><li>网页完整固件刷写</li></ul></div>
+          <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.0-firefly.alpha.17</h3><time datetime="2026-10-18">2026.10.18</time></div>
+          <div><h4>首次引导与发布包更新</h4><ul><li>按六份实机配置重排完整首次引导</li><li>主页与书架直接显示 firefly v0.5.0</li><li>暂时屏蔽主页设置入口</li><li>发布严格 16 MiB 网页刷写固件</li></ul></div>
         </article>
       </section>
 

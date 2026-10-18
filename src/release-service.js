@@ -3,14 +3,24 @@ const apiBaseUrl = environment.VITE_API_BASE_URL?.trim();
 const manifestUrl = environment.VITE_RELEASE_MANIFEST_URL?.trim() || "./firmware/manifest.json";
 
 function normalizeRelease(value) {
+  const codename = typeof value?.codename === "string" ? value.codename.trim() : "";
+  const version = typeof value?.version === "string" ? value.version.trim() : "";
+  const firmwareVersion = typeof value?.firmwareVersion === "string" ? value.firmwareVersion.trim() : "";
+  const channel = typeof value?.channel === "string" && value.channel.trim()
+    ? value.channel.trim()
+    : "stable";
+  const sha256 = typeof value?.sha256 === "string" ? value.sha256.trim().toLowerCase() : "";
+  const size = Number(value?.size);
   if (
     !value ||
     typeof value !== "object" ||
     value.installable === false ||
-    typeof value.codename !== "string" ||
-    !value.codename.trim() ||
-    typeof value.version !== "string" ||
-    !value.version
+    !codename ||
+    !version ||
+    !firmwareVersion ||
+    !Number.isSafeInteger(size) ||
+    size <= 0 ||
+    !/^[a-f0-9]{64}$/.test(sha256)
   ) {
     return null;
   }
@@ -25,15 +35,19 @@ function normalizeRelease(value) {
   if (!path) return null;
 
   return {
-    codename: value.codename.trim(),
-    version: value.version,
+    codename,
+    version,
+    firmwareVersion,
+    label: `${codename} v${version}${channel === "stable" ? "" : ` ${channel}`}`,
     publishedAt:
       typeof value.publishedAt === "string" && !Number.isNaN(Date.parse(value.publishedAt))
         ? value.publishedAt
         : null,
-    channel: typeof value.channel === "string" ? value.channel : "stable",
+    channel,
     chipFamily: build?.chipFamily || value.chipFamily || "ESP32-S3",
     path,
+    size,
+    sha256,
   };
 }
 
