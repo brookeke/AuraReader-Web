@@ -1,6 +1,6 @@
-import { getReleaseAvailability } from "./release-service.js?v=2.8.0";
-import { getHeaderVisibility } from "./header-visibility.js?v=2.8.0";
-import { setupWebFlasher } from "./web-flasher.js?v=2.8.0";
+import { getReleaseAvailability } from "./release-service.js?v=2.8.1";
+import { getHeaderVisibility } from "./header-visibility.js?v=2.8.1";
+import { setupWebFlasher } from "./web-flasher.js?v=2.8.1";
 
 document.documentElement.classList.add("js");
 
