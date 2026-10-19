@@ -8,17 +8,17 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.7\.0" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.7\.0"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.8\.0" \/>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.8\.0"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
 test("branch-hosted source modules are cache-busted together", async () => {
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(main, /"\.\/release-service\.js\?v=2\.7\.0"/);
-  assert.match(main, /"\.\/header-visibility\.js\?v=2\.7\.0"/);
-  assert.match(main, /"\.\/web-flasher\.js\?v=2\.7\.0"/);
+  assert.match(main, /"\.\/release-service\.js\?v=2\.8\.0"/);
+  assert.match(main, /"\.\/header-visibility\.js\?v=2\.8\.0"/);
+  assert.match(main, /"\.\/web-flasher\.js\?v=2\.8\.0"/);
 });
 
 test("image paths also resolve when GitHub Pages serves the repository root", async () => {
@@ -61,10 +61,10 @@ test("the public changelog names only the optimization theme for the latest two 
   const releaseList = html.slice(releaseListStart, releaseListEnd);
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
+  assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.39<\/h3>/);
+  assert.match(html, /<h4>RTC 走时诊断优化<\/h4>/);
   assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.36<\/h3>/);
   assert.match(html, /<h4>封面解析与缓存恢复优化<\/h4>/);
-  assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.29<\/h3>/);
-  assert.match(html, /<h4>连续翻页与跨章性能优化<\/h4>/);
   assert.doesNotMatch(releaseList, /<ul>|<li>/);
   assert.doesNotMatch(releaseList, /优化翻页性能分析|优化 EPUB 后台缓存耗时定位|优化字体性能计时口径/);
 });

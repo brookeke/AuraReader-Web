@@ -100,7 +100,7 @@ pnpm verify
 网页刷机使用单一合并镜像。当前文件放在：
 
 ```text
-firmware/v0.5.0-firefly.alpha.36/AuraReader-v0.5.0-firefly.alpha.36-full-16MB.bin
+firmware/v0.5.0-firefly.alpha.39/AuraReader-v0.5.0-firefly.alpha.39-full-16MB.bin
 ```
 
 发布新版本时，新建 `firmware/vX.Y.Z-codename.prerelease/`，把合并镜像放入其中，并同步更新 `firmware/manifest.json` 的版本身份、`path`、`offset`、文件大小和 SHA-256。不要直接把单独的应用固件作为 `offset: 0` 发布。
@@ -113,5 +113,5 @@ firmware/v0.5.0-firefly.alpha.36/AuraReader-v0.5.0-firefly.alpha.36-full-16MB.bi
 
 ## 发布说明
 
-当前官网版本为 `2.7.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `2.8.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
 
