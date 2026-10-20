@@ -54,19 +54,19 @@ test("the verified AuraReader and official demo releases are presented as ready"
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
-test("the public changelog names only the optimization theme for the latest two releases", async () => {
+test("the public changelog shows the approved alpha.56 optimizations and one prior release", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const releaseListStart = html.indexOf('<div class="release-list" data-visible-limit="2">');
   const releaseListEnd = html.indexOf("</section>", releaseListStart);
   const releaseList = html.slice(releaseListStart, releaseListEnd);
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
-  assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.39<\/h3>/);
-  assert.match(html, /<h4>RTC 走时诊断优化<\/h4>/);
-  assert.match(html, /<h3>v0\.5\.0-firefly\.alpha\.36<\/h3>/);
-  assert.match(html, /<h4>封面解析与缓存恢复优化<\/h4>/);
+  assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.56<\/h3>/);
+  assert.match(releaseList, /<h4>阅读显示与传书体验优化<\/h4><ul><li>优化系统流畅度<\/li><li>修复并优化 Wi-Fi 传书<\/li><\/ul>/);
+  assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.39<\/h3>/);
+  assert.match(releaseList, /<h4>RTC 走时诊断优化<\/h4>/);
+  assert.doesNotMatch(releaseList, /alpha\.36|封面解析与缓存恢复优化/);
   assert.doesNotMatch(releaseList, /alpha\.29|连续翻页与跨章性能优化/);
-  assert.doesNotMatch(releaseList, /<ul>|<li>/);
   assert.doesNotMatch(releaseList, /优化翻页性能分析|优化 EPUB 后台缓存耗时定位|优化字体性能计时口径/);
 });
 
