@@ -26,7 +26,7 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
     {
-      path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB.bin",
+      path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
       offset: 0,
     },
   ]);
@@ -72,7 +72,7 @@ test("the alpha.56 release can enter the flashing flow", async () => {
     builds: [{
       chipFamily: "ESP32-S3",
       parts: [{
-        path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB.bin",
+        path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
         offset: 0,
       }],
     }],
@@ -92,7 +92,7 @@ test("the alpha.56 release can enter the flashing flow", async () => {
       publishedAt: null,
       channel: "alpha.56",
       chipFamily: "ESP32-S3",
-      path: "./firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB.bin",
+      path: "./firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
       size: 0x1000000,
       sha256: "1".repeat(64),
     }],
@@ -113,7 +113,7 @@ test("the merged image matches the verified release artifact", async () => {
   );
   const [release] = manifest.releases;
   const image = await readFile(
-    new URL("firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB.bin", projectRoot),
+    new URL("firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin", projectRoot),
   );
   const digest = createHash("sha256").update(image).digest("hex");
 
