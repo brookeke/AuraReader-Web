@@ -54,17 +54,18 @@ test("the verified AuraReader and official demo releases are presented as ready"
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
-test("the public changelog shows the alpha.56-latest summary and retains approved alpha.56 copy", async () => {
+test("the public changelog shows only the alpha.70 setting option and prior cumulative summary", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const releaseListStart = html.indexOf('<div class="release-list" data-visible-limit="2">');
   const releaseListEnd = html.indexOf("</section>", releaseListStart);
   const releaseList = html.slice(releaseListStart, releaseListEnd);
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
+  assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.70<\/h3>/);
+  assert.match(releaseList, /<h4>设置新增深度清除残影选项<\/h4>/);
   assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.69<\/h3>/);
   assert.match(releaseList, /<h4>Alpha\.56-latest<\/h4>/);
-  assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.56<\/h3>/);
-  assert.match(releaseList, /<h4>阅读显示与传书体验优化<\/h4><ul><li>优化系统流畅度<\/li><li>修复并优化 Wi-Fi 传书<\/li><\/ul>/);
+  assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.56<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.39<\/h3>/);
   assert.doesNotMatch(releaseList, /alpha\.36|封面解析与缓存恢复优化/);
   assert.doesNotMatch(releaseList, /alpha\.29|连续翻页与跨章性能优化/);

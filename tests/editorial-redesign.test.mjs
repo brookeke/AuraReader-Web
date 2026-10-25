@@ -21,15 +21,15 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
-test("the changelog shows the alpha.56-latest summary and retains the alpha.56 entry", async () => {
+test("the changelog shows alpha.70 followed by the alpha.56-latest summary", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const changelog = html.match(/<div class="release-list" data-visible-limit="2">([\s\S]*?)<\/div>\s*<\/section>/)?.[1];
 
   assert.ok(changelog, "expected a two-entry changelog");
   assert.equal((changelog.match(/class="release-entry reveal"/g) ?? []).length, 2);
+  assert.match(changelog, /v0\.5\.0-firefly\.alpha\.70[\s\S]*?<h4>设置新增深度清除残影选项<\/h4>/);
   assert.match(changelog, /v0\.5\.0-firefly\.alpha\.69[\s\S]*?<h4>Alpha\.56-latest<\/h4>/);
-  assert.match(changelog, /v0\.5\.0-firefly\.alpha\.56[\s\S]*?优化系统流畅度[\s\S]*?修复并优化 Wi-Fi 传书/);
-  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.39/);
+  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.56/);
 });
 
 test("key editorial headings stay intact across browser font metrics", async () => {
