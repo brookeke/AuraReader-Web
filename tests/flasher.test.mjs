@@ -18,15 +18,15 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   assert.equal(auraReader.name, "AuraReader");
   assert.equal(auraReader.codename, "firefly");
   assert.equal(auraReader.version, "0.5.0");
-  assert.equal(auraReader.firmwareVersion, "v0.5.0-firefly.alpha.56");
+  assert.equal(auraReader.firmwareVersion, "v0.5.0-firefly.alpha.69");
   assert.equal(auraReader.installable, true);
-  assert.equal(auraReader.channel, "alpha.56");
+  assert.equal(auraReader.channel, "alpha.69");
   assert.equal(auraReader.size, 0x1000000);
   assert.match(auraReader.sha256, /^[a-f0-9]{64}$/);
   assert.ok(build, "expected an ESP32-S3 build");
   assert.deepEqual(build.parts, [
     {
-      path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
+      path: "v0.5.0-firefly.alpha.69/AuraReader-v0.5.0-firefly.alpha.69-full-16MB.bin",
       offset: 0,
     },
   ]);
@@ -50,7 +50,7 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   }
 });
 
-test("the alpha.56 release can enter the flashing flow", async () => {
+test("the alpha.69 release can enter the flashing flow", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const styles = await readFile(new URL("src/styles.css", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
@@ -65,14 +65,14 @@ test("the alpha.56 release can enter the flashing flow", async () => {
     version: "0.5.0",
     state: "available",
     installable: true,
-    channel: "alpha.56",
-    firmwareVersion: "v0.5.0-firefly.alpha.56",
+    channel: "alpha.69",
+    firmwareVersion: "v0.5.0-firefly.alpha.69",
     size: 0x1000000,
     sha256: "1".repeat(64),
     builds: [{
       chipFamily: "ESP32-S3",
       parts: [{
-        path: "v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
+        path: "v0.5.0-firefly.alpha.69/AuraReader-v0.5.0-firefly.alpha.69-full-16MB.bin",
         offset: 0,
       }],
     }],
@@ -85,21 +85,21 @@ test("the alpha.56 release can enter the flashing flow", async () => {
     releases: [{
       codename: "firefly",
       version: "0.5.0",
-      firmwareVersion: "v0.5.0-firefly.alpha.56",
-      label: "firefly v0.5.0 alpha.56",
+      firmwareVersion: "v0.5.0-firefly.alpha.69",
+      label: "firefly v0.5.0 alpha.69",
       description: "严格 16 MiB 完整固件",
       badge: "",
       publishedAt: null,
-      channel: "alpha.56",
+      channel: "alpha.69",
       chipFamily: "ESP32-S3",
-      path: "./firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin",
+      path: "./firmware/v0.5.0-firefly.alpha.69/AuraReader-v0.5.0-firefly.alpha.69-full-16MB.bin",
       size: 0x1000000,
       sha256: "1".repeat(64),
     }],
   });
   assert.match(html, /id="release-status">正在读取固件状态/);
   assert.match(html, /class="flash-product-name">AuraReader<\/span>/);
-  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.56<\/span>/s);
+  assert.match(html, /class="flash-release-identity">\s*<span id="flash-release-codename">firefly<\/span>\s*<span id="flash-release-version">v0\.5\.0<\/span>\s*<span id="flash-release-channel">alpha\.69<\/span>/s);
   assert.match(styles, /\.flash-release-identity\s*\{[^}]*font-size:\s*clamp\(1\.35rem,\s*2vw,\s*2rem\)/s);
   assert.match(main, /availability\.codename/);
   assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>请先选择设备/s);
@@ -113,7 +113,7 @@ test("the merged image matches the verified release artifact", async () => {
   );
   const [release] = manifest.releases;
   const image = await readFile(
-    new URL("firmware/v0.5.0-firefly.alpha.56/AuraReader-v0.5.0-firefly.alpha.56-full-16MB-r2.bin", projectRoot),
+    new URL("firmware/v0.5.0-firefly.alpha.69/AuraReader-v0.5.0-firefly.alpha.69-full-16MB.bin", projectRoot),
   );
   const digest = createHash("sha256").update(image).digest("hex");
 
