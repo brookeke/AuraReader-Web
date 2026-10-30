@@ -21,14 +21,15 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
-test("the changelog shows alpha.71 followed by alpha.70", async () => {
+test("the changelog shows alpha.77 followed by alpha.71", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const changelog = html.match(/<div class="release-list" data-visible-limit="2">([\s\S]*?)<\/div>\s*<\/section>/)?.[1];
 
   assert.ok(changelog, "expected a two-entry changelog");
   assert.equal((changelog.match(/class="release-entry reveal"/g) ?? []).length, 2);
+  assert.match(changelog, /v0\.5\.9-firefly\.alpha\.77[\s\S]*?<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
   assert.match(changelog, /v0\.5\.0-firefly\.alpha\.71[\s\S]*?<h4>阅读排版与 TXT 目录优化<\/h4>/);
-  assert.match(changelog, /v0\.5\.0-firefly\.alpha\.70[\s\S]*?<h4>设置新增深度清除残影选项<\/h4>/);
+  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.70/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.69/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.56/);
 });

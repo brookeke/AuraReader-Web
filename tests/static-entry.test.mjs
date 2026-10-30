@@ -54,20 +54,25 @@ test("the verified AuraReader and official demo releases are presented as ready"
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
-test("the public changelog shows only alpha.71 and alpha.70", async () => {
+test("the public changelog shows only alpha.77 and alpha.71", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const releaseListStart = html.indexOf('<div class="release-list" data-visible-limit="2">');
   const releaseListEnd = html.indexOf("</section>", releaseListStart);
   const releaseList = html.slice(releaseListStart, releaseListEnd);
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
+  assert.match(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
+  assert.match(releaseList, /<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
+  assert.match(releaseList, /阅读界面新增平滑动画，优化系统流畅度。/);
+  assert.match(releaseList, /修复轻点阅读页状态栏或页脚时误开快捷菜单的问题。/);
+  assert.match(releaseList, /优化书架多级目录、封面与列表浏览，以及壁纸缩略图的加载体验（壁纸不建议过多会拖慢锁屏时间）。/);
+  assert.match(releaseList, /修复并优化 Wi‑Fi 传书。/);
   assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.71<\/h3>/);
   assert.match(releaseList, /<h4>阅读排版与 TXT 目录优化<\/h4>/);
   assert.match(releaseList, /新增独立的“大字标题”开关和六种标题标志，优化 EPUB、TXT 章节标题的字号、换行与间距。/);
   assert.match(releaseList, /修复 TXT 目录与正文标题的匹配，扫描完成后可从目录跳转到对应章节。/);
   assert.match(releaseList, /移除长按正文打开目录的手势；仍可通过快捷菜单进入目录，轻点翻页不变。/);
-  assert.match(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.70<\/h3>/);
-  assert.match(releaseList, /<h4>设置新增深度清除残影选项<\/h4>/);
+  assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.70<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.69<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.56<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.39<\/h3>/);
