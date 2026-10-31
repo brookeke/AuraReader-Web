@@ -9,12 +9,14 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   const manifest = JSON.parse(
     await readFile(new URL("firmware/manifest.json", projectRoot), "utf8"),
   );
-  const [auraReader, officialDemo] = manifest.releases;
+  const [auraReader, previous, older, officialDemo] = manifest.releases;
   const build = auraReader.builds.find((item) => item.chipFamily === "ESP32-S3");
   const demoBuild = officialDemo.builds.find((item) => item.chipFamily === "ESP32-S3");
 
   assert.equal(manifest.state, "available");
-  assert.equal(manifest.releases.length, 2);
+  assert.equal(manifest.releases.length, 4);
+  assert.deepEqual(manifest.releases.slice(0, 3).map(({ firmwareVersion }) => firmwareVersion), ["v0.5.9-firefly.alpha.77", "v0.5.0-firefly.alpha.71", "v0.5.0-firefly.alpha.70"]);
+  assert.equal(previous.version, older.version, "rollback releases may share a semantic version");
   assert.equal(auraReader.name, "AuraReader");
   assert.equal(auraReader.codename, "firefly");
   assert.equal(auraReader.version, "0.5.9");
@@ -39,7 +41,7 @@ test("the web flasher publishes AuraReader and the official demo as complete ESP
   assert.equal(officialDemo.size, 0x1000000);
   assert.ok(demoBuild, "expected an official demo ESP32-S3 build");
 
-  for (const release of [auraReader, officialDemo]) {
+  for (const release of manifest.releases) {
     const releaseBuild = release.builds.find((item) => item.chipFamily === "ESP32-S3");
     const imageUrl = new URL(`firmware/${releaseBuild.parts[0].path}`, projectRoot);
     const image = await readFile(imageUrl);
@@ -105,6 +107,15 @@ test("the alpha.77 release can enter the flashing flow", async () => {
   assert.match(html, /data-flow-next="erase"[^>]+disabled[^>]*>请先选择设备/s);
   assert.match(main, /availability\.state === "suspended"/);
   assert.match(flasher, /destination === "erase"[\s\S]*?!canAdvanceFromVersion/);
+});
+
+test("rollback selection distinguishes releases with the same semantic version", async () => {
+  const { findReleaseByFirmwareVersion } = await import(new URL("src/web-flasher.js", projectRoot));
+  const releases = [
+    { version: "0.5.0", firmwareVersion: "v0.5.0-firefly.alpha.71" },
+    { version: "0.5.0", firmwareVersion: "v0.5.0-firefly.alpha.70" },
+  ];
+  assert.equal(findReleaseByFirmwareVersion(releases, "v0.5.0-firefly.alpha.70"), releases[1]);
 });
 
 test("the merged image matches the verified release artifact", async () => {

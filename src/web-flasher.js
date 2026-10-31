@@ -8,6 +8,10 @@ export function canStartInstall({ releaseReady, browserSupported, deviceSelected
   return releaseReady && browserSupported && deviceSelected && confirmed && !busy;
 }
 
+export function findReleaseByFirmwareVersion(releases, firmwareVersion) {
+  return releases.find((release) => release.firmwareVersion === firmwareVersion) ?? releases[0] ?? null;
+}
+
 async function sha256Hex(bytes) {
   const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -70,8 +74,8 @@ export function setupWebFlasher() {
     return inputs.find((input) => input.checked)?.value;
   }
 
-  function selectRelease(version) {
-    selectedRelease = releases.find((release) => release.version === version) ?? releases[0] ?? null;
+  function selectRelease(firmwareVersion) {
+    selectedRelease = findReleaseByFirmwareVersion(releases, firmwareVersion);
     if (versionSummary) {
       versionSummary.textContent = selectedRelease ? selectedRelease.label : "—";
     }
@@ -104,7 +108,7 @@ export function setupWebFlasher() {
   }
 
   function renderReleaseOptions(nextReleases) {
-    releases = nextReleases.slice(0, 2);
+    releases = nextReleases.slice(0, 4);
     selectedRelease = releases[0] ?? null;
     if (!versionOptions) return;
     versionOptions.replaceChildren();
@@ -115,8 +119,8 @@ export function setupWebFlasher() {
       const input = document.createElement("input");
       input.type = "radio";
       input.name = "firmware-version";
-      input.value = release.version;
-      input.dataset.firmwareVersion = release.version;
+      input.value = release.firmwareVersion;
+      input.dataset.firmwareVersion = release.firmwareVersion;
       input.checked = index === 0;
       input.addEventListener("change", () => selectRelease(input.value));
 
@@ -130,7 +134,7 @@ export function setupWebFlasher() {
 
       const tag = document.createElement("span");
       tag.className = "option-tag";
-      tag.textContent = index === 0 ? "当前版本" : release.badge || "可安装";
+      tag.textContent = index === 0 ? "最新版本" : release.badge || "回退版本";
       label.append(input, copy, tag);
       versionOptions.append(label);
     });
@@ -141,7 +145,7 @@ export function setupWebFlasher() {
       unavailable.textContent = "当前没有可安装固件。";
       versionOptions.append(unavailable);
     }
-    selectRelease(selectedRelease?.version);
+    selectRelease(selectedRelease?.firmwareVersion);
     updateVersionStep();
   }
 

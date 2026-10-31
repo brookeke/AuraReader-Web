@@ -75,7 +75,11 @@ export function parseReleaseAvailability(value) {
   }
 
   const candidates = Array.isArray(value.releases) ? value.releases : [value];
-  const releases = candidates.map(normalizeRelease).filter(Boolean).slice(0, 2);
+  const valid = candidates.map(normalizeRelease).filter(Boolean);
+  const releases = [
+    ...valid.filter((release) => release.codename !== "official-demo").slice(0, 3),
+    ...valid.filter((release) => release.codename === "official-demo").slice(0, 1),
+  ];
   if (releases.length === 0) throw new Error("Release catalog response is invalid");
   return {
     state: "available",

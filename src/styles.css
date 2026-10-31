@@ -229,6 +229,7 @@ main { padding-top: 5.5rem; }
 .flash-device-picker > p[data-state="error"] { color: var(--error); }
 .flash-device-picker > p[data-state="success"] { color: var(--ink); font-weight: 600; }
 .version-options, .erase-options { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
+.version-options { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; }
 .flash-option { min-height: 6.4rem; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.25rem; padding: 1.3rem; border: 1px solid var(--line); cursor: pointer; }
 .flash-option:has(input:checked) { border-color: var(--ink); background: rgba(28, 28, 28, 0.04); }
 .flash-option input { width: 1.35rem; height: 1.35rem; margin: 0; accent-color: var(--ink); }

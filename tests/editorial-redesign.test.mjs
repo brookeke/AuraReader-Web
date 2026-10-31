@@ -112,13 +112,14 @@ test("editorial motion resolves immediately when reduced motion is requested", a
   assert.match(reducedMotion, /clip-path:\s*none/);
 });
 
-test("the release catalog supports at most two installable versions", async () => {
+test("the release catalog supports three AuraReader versions and an official demo", async () => {
   const service = await readFile(new URL("src/release-service.js", projectRoot), "utf8");
   const flasher = await readFile(new URL("src/web-flasher.js", projectRoot), "utf8");
 
-  assert.match(service, /slice\(0,\s*2\)/);
+  assert.match(service, /slice\(0,\s*3\)/);
   assert.match(flasher, /data-version-options/);
   assert.match(flasher, /setReleases/);
+  assert.match(flasher, /findReleaseByFirmwareVersion/);
   assert.doesNotMatch(flasher, /const FIRMWARE_URL/);
 });
 
@@ -142,6 +143,14 @@ test("release catalog normalization keeps only valid installable entries", async
   assert.equal(releases[1].firmwareVersion, "v0.1.0-firefly.alpha.1");
   assert.equal(releases[1].size, 4);
   assert.equal(releases[1].sha256, "b".repeat(64));
+});
+
+test("catalog keeps the latest and two rollback builds plus the official demo", async () => {
+  const { parseReleaseCatalog } = await import(new URL("src/release-service.js", projectRoot));
+  const make = (number) => ({ codename: "firefly", version: "0.5.0", firmwareVersion: `v0.5.0-firefly.alpha.${number}`, channel: `alpha.${number}`, path: `./firmware/alpha.${number}.bin`, size: 4, sha256: "a".repeat(64) });
+  const demo = { ...make(1), codename: "official-demo", firmwareVersion: "Read-Pico-demo", channel: "official" };
+  const releases = parseReleaseCatalog({ releases: [make(77), make(71), make(70), make(69), demo] });
+  assert.deepEqual(releases.map(({ firmwareVersion }) => firmwareVersion), ["v0.5.0-firefly.alpha.77", "v0.5.0-firefly.alpha.71", "v0.5.0-firefly.alpha.70", "Read-Pico-demo"]);
 });
 
 test("the flasher labels releases with codename and version", async () => {
