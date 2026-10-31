@@ -272,6 +272,7 @@ main { padding-top: 5.5rem; }
 .release-entry h4 { margin: 0 0 1.5rem; font-family: var(--serif); font-size: 2rem; font-weight: 400; }
 .release-entry ul { margin: 0; padding: 0; list-style: none; }
 .release-entry li { padding: 0.75rem 0; border-top: 1px solid var(--line); color: var(--ink-60); }
+.release-withdrawn { margin: 1.5rem 0 0; padding: 1rem 0; border-top: 1px solid var(--ink); color: var(--ink); font-weight: 600; }
 .release-entry li::before { margin-right: 1rem; content: "—"; }
 
 .faq-section .section-heading { padding-top: 9rem; }

@@ -28,6 +28,7 @@ test("the changelog shows alpha.77 followed by alpha.71", async () => {
   assert.ok(changelog, "expected a two-entry changelog");
   assert.equal((changelog.match(/class="release-entry reveal"/g) ?? []).length, 2);
   assert.match(changelog, /v0\.5\.9-firefly\.alpha\.77[\s\S]*?<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
+  assert.match(changelog, /版本撤回：出现翻页卡顿 bug，等待修复/);
   assert.match(changelog, /v0\.5\.0-firefly\.alpha\.71[\s\S]*?<h4>阅读排版与 TXT 目录优化<\/h4>/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.70/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.69/);

@@ -62,6 +62,7 @@ test("the public changelog shows only alpha.77 and alpha.71", async () => {
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
   assert.match(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
+  assert.match(releaseList, /版本撤回：出现翻页卡顿 bug，等待修复。alpha\.77 已暂停刷写。/);
   assert.match(releaseList, /<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
   assert.match(releaseList, /阅读界面新增平滑动画，优化系统流畅度。/);
   assert.match(releaseList, /修复轻点阅读页状态栏或页脚时误开快捷菜单的问题。/);
