@@ -268,8 +268,9 @@ main { padding-top: 5.5rem; }
 .release-list > .release-entry:nth-child(n + 3) { display: none; }
 .release-entry { display: grid; grid-template-columns: 0.6fr 1fr; gap: 8vw; margin-top: 7rem; padding-block: 2rem; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
 .release-meta p, .release-meta time { color: var(--ink-60); font-size: 0.7rem; letter-spacing: 0.12em; }
-.release-meta h3 { margin: 1rem 0; font-size: 4.5rem; }
+.release-meta h3 { margin: 1rem 0; font-size: clamp(2.2rem, 5vw, 4.5rem); overflow-wrap: anywhere; }
 .release-entry h4 { margin: 0 0 1.5rem; font-family: var(--serif); font-size: 2rem; font-weight: 400; }
+.release-entry h4:not(:first-child) { margin-top: 2.5rem; }
 .release-entry ul { margin: 0; padding: 0; list-style: none; }
 .release-entry li { padding: 0.75rem 0; border-top: 1px solid var(--line); color: var(--ink-60); }
 .release-withdrawn { margin: 1.5rem 0 0; padding: 1rem 0; border-top: 1px solid var(--ink); color: var(--ink); font-weight: 600; }
