@@ -8,17 +8,17 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.14\.0" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.14\.0"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.14\.1" \/>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.14\.1"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
 test("branch-hosted source modules are cache-busted together", async () => {
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(main, /"\.\/release-service\.js\?v=2\.14\.0"/);
-  assert.match(main, /"\.\/header-visibility\.js\?v=2\.14\.0"/);
-  assert.match(main, /"\.\/web-flasher\.js\?v=2\.14\.0"/);
+  assert.match(main, /"\.\/release-service\.js\?v=2\.14\.1"/);
+  assert.match(main, /"\.\/header-visibility\.js\?v=2\.14\.1"/);
+  assert.match(main, /"\.\/web-flasher\.js\?v=2\.14\.1"/);
 });
 
 test("image paths also resolve when GitHub Pages serves the repository root", async () => {

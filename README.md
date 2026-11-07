@@ -113,5 +113,5 @@ firmware/v0.5.9-firefly.alpha.79-rc.64/AuraReader-v0.5.9-firefly.alpha.79-rc.64-
 
 ## 发布说明
 
-当前官网版本为 `2.14.0`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
+当前官网版本为 `2.14.1`。版本变化记录见 [CHANGELOG.md](./CHANGELOG.md)。本仓库未附带开源许可证；如需开放复用，请在发布前另行选择并添加许可证。
 

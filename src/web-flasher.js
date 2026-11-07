@@ -327,10 +327,19 @@ export function setupWebFlasher() {
       });
 
       setProgress("verify");
-      setLiveStatus("写入校验通过，正在重新启动设备…", "working");
-      await loader.after("hard_reset");
+      setLiveStatus("固件写入完成，正在尝试复位设备…", "working");
+      try {
+        await loader.after("hard_reset");
+      } catch {
+        // USB Serial/JTAG may disconnect before the reset completes.
+      }
       setProgress("done", "complete");
-      setLiveStatus("AuraReader 已安装完成。设备正在重新启动。", "success");
+      setLiveStatus(
+        selectedRelease.codename === "official-demo"
+          ? "固件写入完成。请断开 USB 供电，重新接入并开机。"
+          : "固件写入完成。请断开 USB 供电，重新接入并开机；在设备“关于本机”核对版本。",
+        "success",
+      );
     } catch (error) {
       const active = progressItems.find((item) => item.getAttribute("aria-current") === "step");
       if (active) active.dataset.state = "error";
