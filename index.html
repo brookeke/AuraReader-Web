@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f9f8f6" />
     <meta name="description" content="AuraReader 是面向 ESP32-S3 阅读设备的随身极简阅读固件。了解设计、使用方法，并在浏览器中安全刷写固件。" />
     <title>AuraReader / 余白 — 回归阅读本质</title>
-    <link rel="stylesheet" href="./src/styles.css?v=2.14.1" />
+    <link rel="stylesheet" href="./src/styles.css?v=2.15.0" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -46,7 +46,7 @@
           <div><dt>设备</dt><dd>ESP32-S3</dd></div>
           <div><dt>阅读</dt><dd>TXT / EPUB</dd></div>
           <div><dt>传输</dt><dd>TF 卡 / Wi-Fi</dd></div>
-          <div><dt>可刷写版本</dt><dd>firefly v0.5.9 alpha.79-rc.64</dd></div>
+          <div><dt>可刷写版本</dt><dd>firefly v0.5.9 alpha.79-rc.77</dd></div>
         </dl>
       </section>
 
@@ -113,10 +113,10 @@
                 <span class="flash-release-identity">
                   <span id="flash-release-codename">firefly</span>
                   <span id="flash-release-version">v0.5.9</span>
-                  <span id="flash-release-channel">alpha.79-rc.64</span>
+                  <span id="flash-release-channel">alpha.79-rc.77</span>
                 </span>
               </h3>
-              <p>当前可刷写 alpha.79-rc.64、alpha.71 与 alpha.70 的严格 16 MiB 全量镜像。写入将覆盖设备内部数据，过程耗时较长，请保持 USB 连接。写入完成后请断开 USB 供电，重新接入并开机。</p>
+              <p>当前可刷写 alpha.79-rc.77、alpha.79-rc.64 与 alpha.71 的严格 16 MiB 全量镜像。写入将覆盖设备内部数据，过程耗时较长，请保持 USB 连接。写入完成后请断开 USB 供电，重新接入并开机。</p>
               <a class="text-link" href="#faq">查看刷机问题 <span aria-hidden="true">→</span></a>
             </aside>
 
@@ -164,7 +164,7 @@
                 <p class="step-count">步骤 3 / 3</p>
                 <h4 id="flash-confirm-title" tabindex="-1">确认后开始写入</h4>
                 <dl class="flash-summary">
-                  <div><dt>固件版本</dt><dd data-version-summary>firefly v0.5.9 alpha.79-rc.64</dd></div>
+                  <div><dt>固件版本</dt><dd data-version-summary>firefly v0.5.9 alpha.79-rc.77</dd></div>
                   <div><dt>设备连接</dt><dd data-device-summary>尚未选择</dd></div>
                   <div><dt>目标型号</dt><dd>ESP32-S3 / 16 MB</dd></div>
                   <div><dt>数据处理</dt><dd data-erase-summary>完整覆盖</dd></div>
@@ -219,6 +219,19 @@
         </header>
         <div class="release-list" data-visible-limit="2">
           <article class="release-entry reveal">
+            <div class="release-meta"><p>RELEASE CANDIDATE</p><h3>v0.5.9-firefly.alpha.79-rc.77</h3><time datetime="2026-11-20">2026.11.20</time></div>
+            <div>
+              <h4>传书、书架与阅读体验更新</h4>
+              <ul>
+                <li><strong>USB 传书</strong>：在「网络与蓝牙」中新增 USB OTG 传书。连接电脑后可将 TF 卡用作可移动磁盘，结束传书后设备会重新挂载 TF 卡并更新书架。</li>
+                <li><strong>Wi‑Fi 传书</strong>：配网时可扫描并选择附近的 Wi‑Fi，管理网页支持在当前图书目录新建文件夹，并补齐阅读与系统设置。修复密码键盘误触发热点切换的问题，优化传书页面刷新。</li>
+                <li><strong>书架与壁纸</strong>：先显示可操作的目录，再后台加载封面和书籍信息。壁纸浏览优先显示当前页。修复书架和壁纸长按删除偶尔不生效的问题，确认后立即显示「正在删除…」。</li>
+                <li><strong>阅读排版与刷新</strong>：修复首字下沉与下一段重叠、下划线在字间断开，以及连续翻页时偶发的清屏闪烁。页眉页脚文字过长时以省略号收尾。</li>
+                <li><strong>EPUB 与存储</strong>：单章损坏或超出读取上限时，只提示该章读取失败，其余章节仍可阅读。存储页新增「清除书籍缓存」，可保留书籍、进度、书签和壁纸。</li>
+              </ul>
+            </div>
+          </article>
+          <article class="release-entry reveal">
             <div class="release-meta"><p>RELEASE CANDIDATE</p><h3>v0.5.9-firefly.alpha.79-rc.64</h3><time datetime="2026-11-07">2026.11.07</time></div>
             <div>
               <h4>1. 界面与新增功能</h4>
@@ -255,10 +268,6 @@
               </ul>
             </div>
           </article>
-          <article class="release-entry reveal">
-            <div class="release-meta"><p>ALPHA RELEASE</p><h3>v0.5.9-firefly.alpha.77</h3><time datetime="2026-10-30">2026.10.30</time></div>
-            <div><h4>阅读、书架、壁纸与传书体验优化</h4><ul><li>阅读界面新增平滑动画，优化系统流畅度。</li><li>修复轻点阅读页状态栏或页脚时误开快捷菜单的问题。</li><li>优化书架多级目录、封面与列表浏览，以及壁纸缩略图的加载体验（壁纸不建议过多会拖慢锁屏时间）。</li><li>修复并优化 Wi‑Fi 传书。</li></ul><p class="release-withdrawn" role="status">版本撤回：出现翻页卡顿 bug，等待修复。alpha.77 已暂停刷写。</p></div>
-          </article>
         </div>
       </section>
 
@@ -285,6 +294,6 @@
       <p>Designed by Malus/百变逗比i</p>
       <p>© <span data-year>2026</span> AuraReader</p>
     </footer>
-    <script type="module" src="./src/main.js?v=2.14.1"></script>
+    <script type="module" src="./src/main.js?v=2.15.0"></script>
   </body>
 </html>

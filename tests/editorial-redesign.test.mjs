@@ -21,17 +21,17 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
-test("the changelog shows rc.64 followed by the alpha.77 withdrawal", async () => {
+test("the changelog presents rc.77 before rc.64", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const changelog = html.match(/<div class="release-list" data-visible-limit="2">([\s\S]*?)<\/div>\s*<\/section>/)?.[1];
 
   assert.ok(changelog, "expected a two-entry changelog");
   assert.equal((changelog.match(/class="release-entry reveal"/g) ?? []).length, 2);
+  assert.match(changelog, /v0\.5\.9-firefly\.alpha\.79-rc\.77[\s\S]*?传书、书架与阅读体验更新[\s\S]*?v0\.5\.9-firefly\.alpha\.79-rc\.64/);
   assert.match(changelog, /v0\.5\.9-firefly\.alpha\.79-rc\.64[\s\S]*?<h4>1\. 界面与新增功能<\/h4>/);
   assert.match(changelog, /透明 PNG 锁屏壁纸支持/);
   assert.match(changelog, /屏幕下方虚拟触摸按键映射/);
-  assert.match(changelog, /v0\.5\.9-firefly\.alpha\.77[\s\S]*?<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
-  assert.match(changelog, /版本撤回：出现翻页卡顿 bug，等待修复/);
+  assert.doesNotMatch(changelog, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.71/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.70/);
   assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.69/);

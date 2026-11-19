@@ -8,17 +8,17 @@ test("the HTML entry keeps its layout when opened without Vite", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.14\.1" \/>/);
-  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.14\.1"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/src\/styles\.css\?v=2\.15\.0" \/>/);
+  assert.match(html, /<script type="module" src="\.\/src\/main\.js\?v=2\.15\.0"><\/script>/);
   assert.doesNotMatch(main, /import\s+["']\.\/styles\.css["']/);
 });
 
 test("branch-hosted source modules are cache-busted together", async () => {
   const main = await readFile(new URL("src/main.js", projectRoot), "utf8");
 
-  assert.match(main, /"\.\/release-service\.js\?v=2\.14\.1"/);
-  assert.match(main, /"\.\/header-visibility\.js\?v=2\.14\.1"/);
-  assert.match(main, /"\.\/web-flasher\.js\?v=2\.14\.1"/);
+  assert.match(main, /"\.\/release-service\.js\?v=2\.15\.0"/);
+  assert.match(main, /"\.\/header-visibility\.js\?v=2\.15\.0"/);
+  assert.match(main, /"\.\/web-flasher\.js\?v=2\.15\.0"/);
 });
 
 test("image paths also resolve when GitHub Pages serves the repository root", async () => {
@@ -54,13 +54,17 @@ test("the verified AuraReader and official demo releases are presented as ready"
   assert.match(main, /固件 v\$\{availability\.version\} 烧录已暂停/);
 });
 
-test("the public changelog shows only rc.64 and withdrawn alpha.77", async () => {
+test("the public changelog shows the confirmed rc.77 notes and rc.64", async () => {
   const html = await readFile(new URL("index.html", projectRoot), "utf8");
   const releaseListStart = html.indexOf('<div class="release-list" data-visible-limit="2">');
   const releaseListEnd = html.indexOf("</section>", releaseListStart);
   const releaseList = html.slice(releaseListStart, releaseListEnd);
 
   assert.ok(releaseListStart >= 0 && releaseListEnd > releaseListStart);
+  assert.match(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.79-rc\.77<\/h3>/);
+  assert.match(releaseList, /新增 USB OTG 传书/);
+  assert.match(releaseList, /确认后立即显示「正在删除…」/);
+  assert.match(releaseList, /存储页新增「清除书籍缓存」/);
   assert.match(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.79-rc\.64<\/h3>/);
   assert.match(releaseList, /<h4>1\. 界面与新增功能<\/h4>/);
   assert.match(releaseList, /透明 PNG 锁屏壁纸支持/);
@@ -68,13 +72,7 @@ test("the public changelog shows only rc.64 and withdrawn alpha.77", async () =>
   assert.match(releaseList, /<h4>2\. 系统流畅度<\/h4>/);
   assert.match(releaseList, /<h4>3\. 翻页响应<\/h4>/);
   assert.match(releaseList, /<h4>4\. 阅读排版<\/h4>/);
-  assert.match(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
-  assert.match(releaseList, /版本撤回：出现翻页卡顿 bug，等待修复。alpha\.77 已暂停刷写。/);
-  assert.match(releaseList, /<h4>阅读、书架、壁纸与传书体验优化<\/h4>/);
-  assert.match(releaseList, /阅读界面新增平滑动画，优化系统流畅度。/);
-  assert.match(releaseList, /修复轻点阅读页状态栏或页脚时误开快捷菜单的问题。/);
-  assert.match(releaseList, /优化书架多级目录、封面与列表浏览，以及壁纸缩略图的加载体验（壁纸不建议过多会拖慢锁屏时间）。/);
-  assert.match(releaseList, /修复并优化 Wi‑Fi 传书。/);
+  assert.doesNotMatch(releaseList, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.71<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.70<\/h3>/);
   assert.doesNotMatch(releaseList, /<h3>v0\.5\.0-firefly\.alpha\.69<\/h3>/);
