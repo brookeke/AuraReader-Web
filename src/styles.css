@@ -229,7 +229,7 @@ main { padding-top: 5.5rem; }
 .flash-device-picker > p[data-state="error"] { color: var(--error); }
 .flash-device-picker > p[data-state="success"] { color: var(--ink); font-weight: 600; }
 .version-options, .erase-options { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
-.version-options { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; }
+.version-options { min-height: 0; min-inline-size: 0; grid-auto-rows: max-content; overflow-y: auto; scrollbar-gutter: stable; }
 .flash-option { min-height: 6.4rem; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.25rem; padding: 1.3rem; border: 1px solid var(--line); cursor: pointer; }
 .flash-option:has(input:checked) { border-color: var(--ink); background: rgba(28, 28, 28, 0.04); }
 .flash-option input { width: 1.35rem; height: 1.35rem; margin: 0; accent-color: var(--ink); }
@@ -409,7 +409,8 @@ main { padding-top: 5.5rem; }
   .flash-device-picker { grid-template-columns: 1fr; align-items: stretch; }
   .flash-device-picker .button, .flash-device-picker > p { grid-column: 1; grid-row: auto; }
   .flash-device-picker .button { width: 100%; }
-  .flash-option { grid-template-columns: auto 1fr; padding: 1rem; }
+  .flash-option { grid-template-columns: auto minmax(0, 1fr); row-gap: 0.65rem; padding: 1rem; }
+  .flash-option .option-copy { overflow-wrap: anywhere; }
   .option-tag { grid-column: 2; }
   .flash-panel-actions .button { gap: 1rem; }
   .flash-progress { grid-template-columns: 1fr; }
