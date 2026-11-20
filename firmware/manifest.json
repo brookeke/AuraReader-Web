@@ -5,6 +5,31 @@
       "name": "AuraReader",
       "codename": "firefly",
       "version": "0.5.9",
+      "firmwareVersion": "v0.5.9-firefly.alpha.79-rc.78",
+      "installable": true,
+      "channel": "alpha.79-rc.78",
+      "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
+      "publishedAt": "2026-11-21T00:15:59+08:00",
+      "sha256": "413c0d21f86588171c4ec5cb55867a0e311f7b014801f80e3a9c7db2349f627f",
+      "size": 16777216,
+      "new_install_prompt_erase": true,
+      "builds": [
+        {
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "v0.5.9-firefly.alpha.79-rc.78/AuraReader-v0.5.9-firefly.alpha.79-rc.78-full-16MB.bin",
+              "offset": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AuraReader",
+      "codename": "firefly",
+      "version": "0.5.9",
       "firmwareVersion": "v0.5.9-firefly.alpha.79-rc.77",
       "installable": true,
       "channel": "alpha.79-rc.77",
@@ -13,7 +38,18 @@
       "sha256": "d563c067e999e3c7acc355703350b1f910c47603a4758007a068f6b4cb990457",
       "size": 16777216,
       "new_install_prompt_erase": true,
-      "builds": [{ "chipFamily": "ESP32-S3", "improv": false, "parts": [{ "path": "v0.5.9-firefly.alpha.79-rc.77/AuraReader-v0.5.9-firefly.alpha.79-rc.77-full-16MB.bin", "offset": 0 }] }]
+      "builds": [
+        {
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "v0.5.9-firefly.alpha.79-rc.77/AuraReader-v0.5.9-firefly.alpha.79-rc.77-full-16MB.bin",
+              "offset": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "AuraReader",
@@ -27,21 +63,18 @@
       "sha256": "664e00aede39936167212b1ad17f12214435ac4df7cd1bd2f5ca269bfbca8285",
       "size": 16777216,
       "new_install_prompt_erase": true,
-      "builds": [{ "chipFamily": "ESP32-S3", "improv": false, "parts": [{ "path": "v0.5.9-firefly.alpha.79-rc.64/AuraReader-v0.5.9-firefly.alpha.79-rc.64-full-16MB.bin", "offset": 0 }] }]
-    },
-    {
-      "name": "AuraReader",
-      "codename": "firefly",
-      "version": "0.5.0",
-      "firmwareVersion": "v0.5.0-firefly.alpha.71",
-      "installable": true,
-      "channel": "alpha.71",
-      "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
-      "publishedAt": "2026-10-26T02:11:56+08:00",
-      "sha256": "6a3cb892b1815a585a1eebf92200da70268e9f353bdf3cd953e01554482d0370",
-      "size": 16777216,
-      "new_install_prompt_erase": true,
-      "builds": [{ "chipFamily": "ESP32-S3", "improv": false, "parts": [{ "path": "v0.5.0-firefly.alpha.71/AuraReader-v0.5.0-firefly.alpha.71-full-16MB.bin", "offset": 0 }] }]
+      "builds": [
+        {
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "v0.5.9-firefly.alpha.79-rc.64/AuraReader-v0.5.9-firefly.alpha.79-rc.64-full-16MB.bin",
+              "offset": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "小纸 Pico",

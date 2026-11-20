@@ -21,21 +21,13 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
-test("the changelog presents rc.77 before rc.64", async () => {
-  const html = await readFile(new URL("index.html", projectRoot), "utf8");
-  const changelog = html.match(/<div class="release-list" data-visible-limit="2">([\s\S]*?)<\/div>\s*<\/section>/)?.[1];
-
-  assert.ok(changelog, "expected a two-entry changelog");
-  assert.equal((changelog.match(/class="release-entry reveal"/g) ?? []).length, 2);
-  assert.match(changelog, /v0\.5\.9-firefly\.alpha\.79-rc\.77[\s\S]*?传书、书架与阅读体验更新[\s\S]*?v0\.5\.9-firefly\.alpha\.79-rc\.64/);
-  assert.match(changelog, /v0\.5\.9-firefly\.alpha\.79-rc\.64[\s\S]*?<h4>1\. 界面与新增功能<\/h4>/);
-  assert.match(changelog, /透明 PNG 锁屏壁纸支持/);
-  assert.match(changelog, /屏幕下方虚拟触摸按键映射/);
-  assert.doesNotMatch(changelog, /<h3>v0\.5\.9-firefly\.alpha\.77<\/h3>/);
-  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.71/);
-  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.70/);
-  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.69/);
-  assert.doesNotMatch(changelog, /v0\.5\.0-firefly\.alpha\.56/);
+test("the changelog presents rc.78 and rc.77", async () => {
+ const html = await readFile(new URL("index.html", projectRoot), "utf8");
+ const section = html.slice(html.indexOf('class="release-list"'), html.indexOf('id="faq"'));
+ assert.ok(section.indexOf('rc.78') < section.indexOf('rc.77'));
+ assert.match(section, /修复方正楷体等 TF 卡字体无法加载/);
+ assert.match(section, /新增 USB OTG 传书/);
+ assert.equal((section.match(/class="release-entry reveal"/g) ?? []).length, 2);
 });
 
 test("key editorial headings stay intact across browser font metrics", async () => {

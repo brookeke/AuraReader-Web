@@ -135,6 +135,17 @@ export function setupWebFlasher() {
       const tag = document.createElement("span");
       tag.className = "option-tag";
       tag.textContent = index === 0 ? "最新版本" : release.badge || "回退版本";
+      if (release.publishedAt && !Number.isNaN(Date.parse(release.publishedAt))) {
+        const updated = document.createElement("time");
+        updated.className = "option-update-time";
+        updated.dateTime = new Date(release.publishedAt).toISOString();
+        updated.textContent = `更新于 ${new Intl.DateTimeFormat("zh-CN", {
+          timeZone: "Asia/Shanghai",
+          year: "numeric", month: "2-digit", day: "2-digit",
+          hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+        }).format(new Date(release.publishedAt))}（北京时间）`;
+        tag.append(updated);
+      }
       label.append(input, copy, tag);
       versionOptions.append(label);
     });

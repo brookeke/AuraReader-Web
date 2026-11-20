@@ -432,3 +432,4 @@ main { padding-top: 5.5rem; }
   .js .reveal-clip .screen-frame { clip-path: none; }
   .js .reveal-clip .screen-frame img, .js .section-heading.reveal::before { transform: none; }
 }
+.option-update-time { display: block; margin-top: 0.35rem; font-size: 0.65rem; letter-spacing: normal; }
