@@ -59,7 +59,7 @@ test("the changelog presents rc.78-txt-layout and rc.78", async () => {
  const section = html.slice(html.indexOf('class="release-list"'), html.indexOf('id="faq"'));
  assert.ok(section.indexOf('rc.78-txt-layout') < section.lastIndexOf('rc.78'));
  assert.match(section, /修复方正楷体等 TF 卡字体无法加载/);
- assert.match(section, /修复 TXT 跨读盘区块/);
+ assert.match(section, /修复 TXT 提前分页/);
  assert.equal((section.match(/class="release-entry reveal"/g) ?? []).length, 2);
 });
 
