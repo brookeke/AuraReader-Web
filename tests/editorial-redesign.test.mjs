@@ -21,12 +21,12 @@ test("the editorial homepage follows the planned information architecture", asyn
   assert.match(html, /data-version-options/);
 });
 
-test("the changelog presents rc.78 and rc.77", async () => {
+test("the changelog presents rc.78-txt-layout and rc.78", async () => {
  const html = await readFile(new URL("index.html", projectRoot), "utf8");
  const section = html.slice(html.indexOf('class="release-list"'), html.indexOf('id="faq"'));
- assert.ok(section.indexOf('rc.78') < section.indexOf('rc.77'));
+ assert.ok(section.indexOf('rc.78-txt-layout') < section.lastIndexOf('rc.78'));
  assert.match(section, /修复方正楷体等 TF 卡字体无法加载/);
- assert.match(section, /新增 USB OTG 传书/);
+ assert.match(section, /修复 TXT 跨读盘区块/);
  assert.equal((section.match(/class="release-entry reveal"/g) ?? []).length, 2);
 });
 

@@ -5,6 +5,31 @@
       "name": "AuraReader",
       "codename": "firefly",
       "version": "0.5.9",
+      "firmwareVersion": "v0.5.9-firefly.alpha.79-rc.78-txt-layout",
+      "installable": true,
+      "channel": "alpha.79-rc.78-txt-layout",
+      "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
+      "publishedAt": "2026-11-22T21:18:20+08:00",
+      "sha256": "1e5749bf11ef81f9e17821d21e7e26bcc37eb67bc7750c75da131a79b1ade0a4",
+      "size": 16777216,
+      "new_install_prompt_erase": true,
+      "builds": [
+        {
+          "chipFamily": "ESP32-S3",
+          "improv": false,
+          "parts": [
+            {
+              "path": "v0.5.9-firefly.alpha.79-rc.78-txt-layout/AuraReader-v0.5.9-firefly.alpha.79-rc.78-txt-layout-full-16MB.bin",
+              "offset": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AuraReader",
+      "codename": "firefly",
+      "version": "0.5.9",
       "firmwareVersion": "v0.5.9-firefly.alpha.79-rc.78",
       "installable": true,
       "channel": "alpha.79-rc.78",
@@ -45,31 +70,6 @@
           "parts": [
             {
               "path": "v0.5.9-firefly.alpha.79-rc.77/AuraReader-v0.5.9-firefly.alpha.79-rc.77-full-16MB.bin",
-              "offset": 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "AuraReader",
-      "codename": "firefly",
-      "version": "0.5.9",
-      "firmwareVersion": "v0.5.9-firefly.alpha.79-rc.64",
-      "installable": true,
-      "channel": "alpha.79-rc.64",
-      "description": "AuraReader 阅读固件 · 严格 16 MiB 全量镜像",
-      "publishedAt": "2026-11-07T10:31:57+08:00",
-      "sha256": "664e00aede39936167212b1ad17f12214435ac4df7cd1bd2f5ca269bfbca8285",
-      "size": 16777216,
-      "new_install_prompt_erase": true,
-      "builds": [
-        {
-          "chipFamily": "ESP32-S3",
-          "improv": false,
-          "parts": [
-            {
-              "path": "v0.5.9-firefly.alpha.79-rc.64/AuraReader-v0.5.9-firefly.alpha.79-rc.64-full-16MB.bin",
               "offset": 0
             }
           ]
